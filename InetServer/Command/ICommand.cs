@@ -1,15 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using InetServer.Command;
 
 namespace InetServer
 {
 
-    public interface ICommand
+    public abstract class ICommand
     {
-        CmdType Cmd { get; }
-        byte[] destruct();
-        void construct(byte[] payload);
+        private Dictionary<CmdType, Func<byte[], ICommand>> mapping = new Dictionary<CmdType, Func<byte[], ICommand>>
+        {
+            { CmdType.Deposit, x => new Deposit(x)} 
+        };
 
-        void Execute(List<Account> accounts);
+        protected abstract CmdType Cmd { get; }
+        public abstract byte[] Destruct();
+
+        protected ICommand(byte[] payload)
+        {
+
+        }
+
+        public abstract void Execute(List<Account> accounts);
     }
 }
