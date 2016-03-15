@@ -10,7 +10,7 @@ namespace InetServer.Command
         public int Owner { get; }
         public int Amount { get; set; }
 
-        protected override CmdType Cmd => CmdType.Deposit;
+        public override CmdType Cmd => CmdType.Deposit;
 
         public Deposit(byte[] payload) : base(payload)
         {
@@ -32,13 +32,6 @@ namespace InetServer.Command
             return payload;
         }
 
-        public override void Execute(List<Account> accounts)
-        {
-            foreach (var a in accounts.Where(a => a.Cardnumber == Owner))
-            {
-                a.Savings += Amount;
-                return;
-            }
-        }
+        //public void Execute(Account accounts) => accounts.Savings += Amount;
     }
 }

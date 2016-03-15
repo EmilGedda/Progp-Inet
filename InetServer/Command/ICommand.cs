@@ -12,14 +12,12 @@ namespace InetServer
             { CmdType.Deposit, x => new Deposit(x)} 
         };
 
-        protected abstract CmdType Cmd { get; }
+        public abstract CmdType Cmd { get; }
         public abstract byte[] Destruct();
 
         protected ICommand(byte[] payload)
         {
 
         }
-
-        public abstract void Execute(List<Account> accounts);
     }
 }
