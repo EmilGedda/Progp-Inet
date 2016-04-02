@@ -4,18 +4,21 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using InetServer.Command;
 
 namespace InetServer
 {
     class Client
     {
-        public Action<byte[]> Request { get; }
-        private Account account { get; }
+        public delegate void RequestEventHandler(Client c, byte[] payload);
+        public event RequestEventHandler Request; 
+        public Account Acc { get; private set; }
+        public bool LoggedIn => Acc != null;
+        public void Login(Account acc) => Acc = acc;
         private TcpClient Tcp { get; }
 
-        public Client(TcpClient client, Action<byte[]> request)
+        public Client(TcpClient client)
         {
-            Request = request;
             Tcp = client;
             var t = Listen();
             if (t.IsFaulted)
@@ -29,17 +32,11 @@ namespace InetServer
                 using (var stream = Tcp.GetStream())
                 {
                     var buffer = new byte[4096]; //TODO: Listen to end
-                    Console.WriteLine("Reading from Client: " + account.Cardnumber);
+                    Console.WriteLine("Reading from Client: " + Acc.Cardnumber);
                     var cnt = await stream.ReadAsync(buffer, 0, buffer.Length);
-                    Request(buffer); //TODO: CommandTranslator service, translates byte[] to ICommand and executes lambdas over it.
+                    if (cnt > 0) Request?.Invoke(this, buffer);
                 }
             });
         }
-    }
-
-    class CommandEvent : EventArgs
-    {
-        public Client client { get; set; }
-        public ICommand Command { get; set; }
     }
 }

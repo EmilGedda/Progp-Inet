@@ -8,30 +8,37 @@ namespace InetServer.Command
     {
 
         public int Owner { get; }
-        public int Amount { get; set; }
+        public int Amount { get; }
 
-        public override CmdType Cmd => CmdType.Deposit;
+        public Deposit(int owner, int amount)
+        {
+            Owner = owner;
+            Amount = amount;
 
-        public Deposit(byte[] payload) : base(payload)
+        }
+        public Deposit(byte[] payload)
         {
             Owner = BitConverter.ToInt32(payload, 1);
             Amount = BitConverter.ToInt32(payload, 5);
         }
 
-        public override byte[] Destruct()
+        protected byte[] destruct(CmdType t)
         {
-            var payload = new byte[9];
+            var p = new byte[10];
             var owner = BitConverter.GetBytes(Owner);
             var amount = BitConverter.GetBytes(Amount);
-            payload[0] = (byte) Cmd;
+            p[0] = (byte)t;
             for (var i = 1; i < owner.Length; i++)
-                payload[i] = owner[i];
+                p[i] = owner[i];
             for (var i = 5; i < amount.Length; i++)
-                payload[i] = amount[i];
+                p[i] = amount[i];
 
-            return payload;
+            return p;
         }
+        public override byte[] Destruct()
+        {
 
-        //public void Execute(Account accounts) => accounts.Savings += Amount;
+            return destruct(CmdType.Deposit);
+        }
     }
 }

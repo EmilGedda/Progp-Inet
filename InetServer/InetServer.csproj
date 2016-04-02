@@ -45,15 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
-    <Compile Include="AccountSerializer.cs" />
+    <Compile Include="Account\Account.cs" />
+    <Compile Include="Account\AccountSerializer.cs" />
+    <Compile Include="Network\Client.cs" />
     <Compile Include="Command\CommandType.cs" />
     <Compile Include="Command\Deposit.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\Login.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="Network\Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
