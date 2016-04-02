@@ -1,6 +1,10 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using InetServer.Command;
 
 namespace InetServer
@@ -15,38 +19,35 @@ namespace InetServer
         // ReSharper disable once UseObjectOrCollectionInitializer
         public async void Listen()
         {
+            listener.Start();
+            Console.WriteLine("[INFO] Server started on " + (listener.LocalEndpoint as IPEndPoint));
             while (true)
             {
                 var tcp = await listener.AcceptTcpClientAsync();
                 var c = new Client(tcp);
-                c.Request += NewTranslator().OnRequest;
+                Console.WriteLine("[INFO] New connection from " + (tcp.Client.RemoteEndPoint as IPEndPoint));
+                c.Request += new CommandTranslator(new Dictionary<CmdType, CommandTranslator.CommandEventHandler>
+                {
+                    {CmdType.Deposit, OnDeposit},
+                    {CmdType.Withdrawal, OnWithdrawal}
+                }).OnRequest;
+
                 clients.Add(c);
             }
         }
 
-        private CommandTranslator NewTranslator()
-        {
-            return new CommandTranslator(new Dictionary<CmdType, CommandTranslator.CommandEventHandler>
-            {
-                {CmdType.Deposit, OnDeposit},
-                {CmdType.Withdrawal, OnWithdrawal}
-            });
-        }
-
         public void SendCommand(Client c, ICommand cmd)
         {
-
         }
 
-        public void OnDeposit(Client c, ICommand cmd)
+
+        public void OnDeposit(Client c, ICommand d) => c.Acc.Savings += ((Deposit) d).Amount;
+
+        public void OnWithdrawal(Client client, ICommand cmd)
         {
-            var d = (Deposit) cmd;
-            c.Acc.Savings += d.Amount;
-        }
-        public void OnWithdrawal(Client c, ICommand cmd)
-        {
-            var d = (Withdrawal)cmd;
-            if(d.Valid) c.Acc.Savings -= d.Amount;
+            var w = (Withdrawal) cmd;
+            if (w.Valid)
+                client.Acc.Savings -= w.Amount;
         }
     }
 }

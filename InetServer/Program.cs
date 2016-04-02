@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace InetServer
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
+            var s = new Server();
+            s.Listen();
+            //s.Poll();
+            Console.ReadKey();
         }
     }
 }

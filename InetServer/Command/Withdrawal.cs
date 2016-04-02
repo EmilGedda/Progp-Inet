@@ -10,7 +10,7 @@ namespace InetServer.Command
     {
         public bool Valid { get; }
 
-        public Withdrawal(int owner, int amount, bool valid) : base(owner, amount)
+        public Withdrawal(int amount, bool valid) : base(amount)
         {
             Valid = valid;
         }
