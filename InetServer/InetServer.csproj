@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="Account\Account.cs" />
     <Compile Include="Account\AccountSerializer.cs" />
+    <Compile Include="Command\CommandTranslator.cs" />
+    <Compile Include="Command\Withdrawal.cs" />
     <Compile Include="Network\Client.cs" />
     <Compile Include="Command\CommandType.cs" />
     <Compile Include="Command\Deposit.cs" />

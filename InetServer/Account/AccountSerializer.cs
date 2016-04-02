@@ -29,7 +29,7 @@ namespace InetServer
                 Directory.CreateDirectory(Dir);
 
             foreach (var a in accounts)
-                using (var fs = new FileStream(Dir + "/" + a.Cardnumber + ".xml", FileMode.Create))
+                using (var fs = new FileStream(Dir + "/" + a.Cardnumber + ".xml", FileMode.Create, FileAccess.ReadWrite))
                     Xs.Serialize(fs, a);
         }
     }
