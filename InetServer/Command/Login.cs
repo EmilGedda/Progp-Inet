@@ -25,7 +25,7 @@ namespace InetServer.Command
         public override byte[] Destruct()
         {
             var payload = new byte[10];
-            payload[0] = (byte)CmdType.Login;
+            payload[0] = (byte)Message.Login;
 
             var cn = BitConverter.GetBytes(cardnumber);
             for (var i = 1; i < cn.Length; i++)

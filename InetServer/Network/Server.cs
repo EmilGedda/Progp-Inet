@@ -31,10 +31,10 @@ namespace InetServer
                 var tcp = await listener.AcceptTcpClientAsync();
                 var c = new Client(tcp);
                 Console.WriteLine("[INFO] New connection from " + (tcp.Client.RemoteEndPoint as IPEndPoint));
-                c.Request += new CommandTranslator(new Dictionary<CmdType, CommandTranslator.CommandEventHandler>
+                c.Request += new CommandTranslator(new Dictionary<Message, CommandTranslator.CommandEventHandler>
                 {
-                    {CmdType.Deposit, OnDeposit},
-                    {CmdType.Withdrawal, OnWithdrawal}
+                    {Message.Deposit, OnDeposit},
+                    {Message.Withdrawal, OnWithdrawal}
                 }).OnRequest;
 
                 clients.Add(c);

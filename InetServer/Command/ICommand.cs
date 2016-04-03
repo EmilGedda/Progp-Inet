@@ -7,20 +7,20 @@ namespace InetServer
 
     public abstract class ICommand
     {
-        private static readonly Dictionary<CmdType, Func<byte[], ICommand>> mapping = new Dictionary<CmdType, Func<byte[], ICommand>>
+        private static readonly Dictionary<Message, Func<byte[], ICommand>> mapping = new Dictionary<Message, Func<byte[], ICommand>>
         {
-            { CmdType.Deposit, x => new Deposit(x)},
-            { CmdType.Withdrawal, x => new Withdrawal(x)}
+            { Message.Deposit, x => new Deposit(x)},
+            { Message.Withdrawal, x => new Withdrawal(x)}
         };
 
-        public static ICommand Create(CmdType c, byte[] payload)
+        public static ICommand Create(Message c, byte[] payload)
         {
             return mapping[c](payload);
         }
 
-        public static CmdType GetType(byte[] payload)
+        public static Message GetType(byte[] payload)
         {
-            return (CmdType)Enum.Parse(typeof (CmdType), payload[0].ToString());
+            return (Message)Enum.Parse(typeof (Message), payload[0].ToString());
         }
         public abstract byte[] Destruct();
     }

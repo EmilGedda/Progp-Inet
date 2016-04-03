@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InetServer.Command
 {
-    public enum CmdType : byte
+    public enum Message : byte
     {
         Login,
         Status,

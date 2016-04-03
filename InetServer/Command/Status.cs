@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InetServer.Command
 {
@@ -27,7 +23,7 @@ namespace InetServer.Command
         public override byte[] Destruct()
         {
             var payload = new byte[10];
-            payload[0] = (byte) CmdType.Status;
+            payload[0] = (byte) Message.Status;
             payload[1] = (byte) code;
 
             var cn = BitConverter.GetBytes(cardnumber);

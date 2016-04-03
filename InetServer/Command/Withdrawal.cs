@@ -22,7 +22,7 @@ namespace InetServer.Command
 
         public override byte[] Destruct()
         {
-            byte[] payload = destruct(CmdType.Withdrawal);
+            byte[] payload = destruct(Message.Withdrawal);
             payload[9] = (byte)(Valid ? 1 : 0);
             return payload;
         }

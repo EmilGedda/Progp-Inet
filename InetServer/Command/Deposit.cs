@@ -18,7 +18,7 @@ namespace InetServer.Command
             Amount = BitConverter.ToInt32(payload, 1);
         }
 
-        protected byte[] destruct(CmdType t)
+        protected byte[] destruct(Message t)
         {
             var payload = new byte[10];
             payload[0] = (byte)t;
@@ -30,7 +30,7 @@ namespace InetServer.Command
         }
         public override byte[] Destruct()
         {
-            return destruct(CmdType.Deposit);
+            return destruct(Message.Deposit);
         }
     }
 }

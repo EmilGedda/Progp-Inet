@@ -10,8 +10,8 @@ namespace InetServer.Command
     internal class CommandTranslator
     {
         public delegate Status.StatusCode CommandEventHandler(Client c, ICommand comm);
-        private readonly Dictionary<CmdType, CommandEventHandler> handlers; 
-        public CommandTranslator(Dictionary<CmdType, CommandEventHandler> eventsHandlers)
+        private readonly Dictionary<Message, CommandEventHandler> handlers; 
+        public CommandTranslator(Dictionary<Message, CommandEventHandler> eventsHandlers)
         {
             handlers = eventsHandlers;
         }
@@ -20,7 +20,7 @@ namespace InetServer.Command
             var ctype = ICommand.GetType(payload);
             var cmd = ICommand.Create(ctype, payload);
             Status.StatusCode? code = null;
-            if(ctype == CmdType.Login || client.LoggedIn)
+            if(ctype == Message.Login || client.LoggedIn)
                 code = handlers[ctype]?.Invoke(client, cmd);
             
             client.SendAsync(
