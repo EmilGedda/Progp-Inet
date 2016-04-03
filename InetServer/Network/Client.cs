@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InetServer
 {
-    internal class Client
+    internal class Client : IDisposable
     {
         public delegate void RequestEventHandler(Client c, byte[] payload);
         
@@ -15,8 +15,7 @@ namespace InetServer
             Tcp = client;
             Listen().ContinueWith(task =>
             {
-                Console.WriteLine("[INFO] Client disconnected: " + (Tcp.Client.RemoteEndPoint as IPEndPoint));
-                Tcp.Dispose();
+                Dispose();
             });
         }
 
@@ -39,6 +38,12 @@ namespace InetServer
                     if (buffer[0] < 127) Request?.Invoke(this, buffer);
                 }
             });
+        }
+
+        public void Dispose()
+        {
+            Console.WriteLine("[INFO] Client disconnected: " + (Tcp.Client.RemoteEndPoint as IPEndPoint));
+            Tcp.Dispose();
         }
     }
 }

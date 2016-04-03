@@ -10,10 +10,11 @@ namespace InetServer
     {
         private static void Main()
         {
-            var s = new Server();
-            s.Listen();
-            //s.Poll();
-            Console.ReadKey();
+            using (var s = new Server())
+            {
+                s.Listen();
+                Console.ReadKey();
+            }
         }
     }
 }
