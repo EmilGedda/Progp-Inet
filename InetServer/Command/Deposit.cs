@@ -20,13 +20,13 @@ namespace InetServer.Command
 
         protected byte[] destruct(CmdType t)
         {
-            var p = new byte[10];
-            p[0] = (byte)t;
+            var payload = new byte[10];
+            payload[0] = (byte)t;
             var amount = BitConverter.GetBytes(Amount);
             for (var i = 1; i < amount.Length; i++)
-                p[i] = amount[i];
+                payload[i] = amount[i];
 
-            return p;
+            return payload;
         }
         public override byte[] Destruct()
         {

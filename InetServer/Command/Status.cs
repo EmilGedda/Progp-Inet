@@ -46,6 +46,7 @@ namespace InetServer.Command
             Fail,           // Unknown failure
             InvalidPin,     // Login
             InvalidCode,    // Withdrawal failure
+            NotLoggedIn,    // Not logged in
         }
     }
 }

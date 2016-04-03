@@ -20,7 +20,6 @@ namespace InetServer.Command
             var ctype = ICommand.GetType(payload);
             var cmd = ICommand.Create(ctype, payload);
             Status.StatusCode? code = null;
-
             if(ctype == CmdType.Login || client.LoggedIn)
                 code = handlers[ctype]?.Invoke(client, cmd);
             

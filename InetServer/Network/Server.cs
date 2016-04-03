@@ -57,8 +57,10 @@ namespace InetServer
 
         public void Dispose()
         {
+            Console.WriteLine("[INFO] Shutting down...");
             AccountSerializer.SaveAccounts(accounts);
-            foreach (var c in clients) c.Dispose();
+            foreach (var c in clients.Where(c => !c.Disposed)) c.Dispose();
+            Console.WriteLine("[INFO] Server exited.");
         }
     }
 }
