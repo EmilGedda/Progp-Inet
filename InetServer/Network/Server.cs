@@ -9,6 +9,7 @@ namespace InetServer
 {
     internal class Server : IDisposable
     {
+        private readonly string motd = "Welcome to bank X Y Z";
         private readonly List<Client> clients = new List<Client>();
         private readonly List<Account> accounts; 
         // Create a listener on localhost:420
@@ -40,17 +41,18 @@ namespace InetServer
             }
         }
 
-        public void SendCommand(Client c, ICommand cmd)
+        public Status.StatusCode OnDeposit(Client c, ICommand d)
         {
+            c.Acc.Savings += ((Deposit) d).Amount;
+            return Status.StatusCode.Success;
         }
 
-
-        public void OnDeposit(Client c, ICommand d) => c.Acc.Savings += ((Deposit) d).Amount;
-
-        public void OnWithdrawal(Client client, ICommand cmd)
+        public Status.StatusCode OnWithdrawal(Client client, ICommand cmd)
         {
             var w = (Withdrawal) cmd;
-            if (w.Valid) client.Acc.Savings -= w.Amount;
+            if (!w.Valid) return Status.StatusCode.InvalidCode;
+            client.Acc.Savings -= w.Amount;
+            return Status.StatusCode.Success;
         }
 
         public void Dispose()

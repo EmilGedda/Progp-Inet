@@ -12,6 +12,7 @@ namespace InetServer
         {
             using (var s = new Server())
             {
+                Console.CancelKeyPress += (sender, args) => s?.Dispose();
                 s.Listen();
                 Console.ReadKey();
             }

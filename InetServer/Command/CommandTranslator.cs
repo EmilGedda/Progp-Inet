@@ -9,7 +9,7 @@ namespace InetServer.Command
 {
     internal class CommandTranslator
     {
-        public delegate void CommandEventHandler(Client c, ICommand comm);
+        public delegate Status.StatusCode CommandEventHandler(Client c, ICommand comm);
         private readonly Dictionary<CmdType, CommandEventHandler> handlers; 
         public CommandTranslator(Dictionary<CmdType, CommandEventHandler> eventsHandlers)
         {
@@ -19,8 +19,14 @@ namespace InetServer.Command
         {
             var ctype = ICommand.GetType(payload);
             var cmd = ICommand.Create(ctype, payload);
+            Status.StatusCode? code = null;
+
             if(ctype == CmdType.Login || client.LoggedIn)
-                handlers[ctype]?.Invoke(client, cmd);
+                code = handlers[ctype]?.Invoke(client, cmd);
+            
+            client.SendAsync(
+                new Status(client.Acc, code ?? Status.StatusCode.Fail)
+            );
         }
     }
 }

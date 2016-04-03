@@ -21,8 +21,8 @@ namespace InetServer.Command
         protected byte[] destruct(CmdType t)
         {
             var p = new byte[10];
-            var amount = BitConverter.GetBytes(Amount);
             p[0] = (byte)t;
+            var amount = BitConverter.GetBytes(Amount);
             for (var i = 1; i < amount.Length; i++)
                 p[i] = amount[i];
 

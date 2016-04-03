@@ -13,7 +13,7 @@ namespace InetServer
         public Client(TcpClient client)
         {
             Tcp = client;
-            Listen().ContinueWith(task =>
+            ListenAsync().ContinueWith(task =>
             {
                 Dispose();
             });
@@ -25,7 +25,7 @@ namespace InetServer
         public event RequestEventHandler Request;
         public void Login(Account acc) => Acc = acc;
 
-        public Task Listen()
+        public Task ListenAsync()
         {
             return Task.Run(async () =>
             {
@@ -38,6 +38,12 @@ namespace InetServer
                     if (buffer[0] < 127) Request?.Invoke(this, buffer);
                 }
             });
+        }
+
+        public async void SendAsync(ICommand cmd)
+        {
+            var payload = cmd.Destruct();
+            await Tcp.GetStream().WriteAsync(payload, 0, payload.Length);
         }
 
         public void Dispose()
