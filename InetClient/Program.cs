@@ -12,15 +12,21 @@ namespace InetClient
     {
         private static Menu currentMenu = new LoginMenu();
         private static TcpClient client = new TcpClient();
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             try {
-                Console.WriteLine("Starting client...");
+                Console.Clear();
+                Console.Write("Connecting to server...");
                 client.Connect(IPAddress.Loopback, 420);
                 Console.Clear();
+                Console.Write("Enter cardnumber: ");
+                string cn = Console.ReadLine();
+                Console.Write("Enter PIN: ");
+                string pin = Console.ReadLine();
                 currentMenu.Print();
             } catch (SocketException se) {
-                Console.WriteLine($"[EXCEPTION] {se.Message}");
+                Console.WriteLine($"\n [EXCEPTION] {se.Message}");
             }
             client.Close();
             Console.ReadKey();

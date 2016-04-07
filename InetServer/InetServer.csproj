@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,14 +48,15 @@
   <ItemGroup>
     <Compile Include="Account\Account.cs" />
     <Compile Include="Account\AccountSerializer.cs" />
-    <Compile Include="Command\CommandTranslator.cs" />
-    <Compile Include="Command\Status.cs" />
-    <Compile Include="Command\Withdrawal.cs" />
+    <Compile Include="i18n\Language.cs" />
+    <Compile Include="i18n\LanguageSerializer.cs" />
+    <Compile Include="Message\MessageTranslator.cs" />
+    <Compile Include="Message\Status.cs" />
+    <Compile Include="Message\Withdrawal.cs" />
     <Compile Include="Network\Client.cs" />
-    <Compile Include="Command\CommandType.cs" />
-    <Compile Include="Command\Deposit.cs" />
-    <Compile Include="Command\ICommand.cs" />
-    <Compile Include="Command\Login.cs" />
+    <Compile Include="Message\Deposit.cs" />
+    <Compile Include="Message\IMessage.cs" />
+    <Compile Include="Message\Login.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Network\Server.cs" />
@@ -62,6 +64,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

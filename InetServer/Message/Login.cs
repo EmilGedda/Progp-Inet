@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InetServer.Command
+namespace InetServer.Message
 {
-    class Login : ICommand
+    class Login : IMessage
     {
         private int cardnumber;
         private short pin;
@@ -25,7 +25,7 @@ namespace InetServer.Command
         public override byte[] Destruct()
         {
             var payload = new byte[10];
-            payload[0] = (byte)Message.Login;
+            payload[0] = (byte)MessageType.Login;
 
             var cn = BitConverter.GetBytes(cardnumber);
             for (var i = 1; i < cn.Length; i++)

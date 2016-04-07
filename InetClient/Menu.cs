@@ -12,34 +12,25 @@ namespace InetClient
     {
         protected abstract string Title { get; }
 
-        protected abstract List<MenuEntry> MenuList { get; }
+        protected abstract List<string> Labels { get; }
 
         public void Print(string banner = null)
         {
             Console.Clear();
             Console.WriteLine();
-            string t = $" {Title}";
+            string t = $" {Title} ";
             Console.WriteLine(t);
             Console.WriteLine(new string('-', t.Length));
             if(banner != null) Console.WriteLine(" " + banner);
-            for (int i = 0; i < MenuList.Count; i++)
-                Console.WriteLine($" [{i+1}] {MenuList[i].Label}");
-            
+            for (int i = 0; i < Labels.Count; i++)
+                Console.WriteLine($" [{i+1}] {Labels[i]}");
+        }
+
+        public void Run()
+        {
             Console.WriteLine();
             Console.Write(" Enter option: ");
             Console.ReadKey(true);
-        }
-
-        protected class MenuEntry
-        {
-            public string Label;
-            private Action action;
-
-            public MenuEntry(string label, Action action)
-            {
-                Label = label;
-                this.action = action;
-            }
         }
     }
 }

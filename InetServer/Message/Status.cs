@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace InetServer.Command
+namespace InetServer.Message
 {
-    class Status : ICommand
+    internal class Status : IMessage
     {
         private readonly int cardnumber;
-        private readonly int savings;
         private readonly StatusCode code;
+        private readonly int savings;
 
         public Status(Account acc, StatusCode code)
         {
@@ -14,16 +14,18 @@ namespace InetServer.Command
             savings = acc.Savings;
             this.code = code;
         }
+
         public Status(byte[] payload)
         {
-            code = (StatusCode)Enum.Parse(typeof(StatusCode), payload[1].ToString());
+            code = (StatusCode) Enum.Parse(typeof (StatusCode), payload[1].ToString());
             cardnumber = BitConverter.ToInt32(payload, 2);
             savings = BitConverter.ToInt32(payload, 6);
         }
+
         public override byte[] Destruct()
         {
             var payload = new byte[10];
-            payload[0] = (byte) Message.Status;
+            payload[0] = (byte) MessageType.Status;
             payload[1] = (byte) code;
 
             var cn = BitConverter.GetBytes(cardnumber);
@@ -36,13 +38,14 @@ namespace InetServer.Command
 
             return payload;
         }
-        public enum StatusCode : byte
-        {
-            Success,        // Generic success
-            Fail,           // Unknown failure
-            InvalidPin,     // Login
-            InvalidCode,    // Withdrawal failure
-            NotLoggedIn,    // Not logged in
-        }
+    }
+
+    public enum StatusCode : byte
+    {
+        Success, // Generic success
+        Fail, // Unknown failure
+        InvalidPin, // Login
+        InvalidCode, // Withdrawal failure
+        NotLoggedIn // Not logged in
     }
 }

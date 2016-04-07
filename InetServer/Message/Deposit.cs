@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace InetServer.Command
+namespace InetServer.Message
 {
-    public class Deposit : ICommand
+    public class Deposit : IMessage
     {
      
         public int Amount { get; }
@@ -18,7 +18,7 @@ namespace InetServer.Command
             Amount = BitConverter.ToInt32(payload, 1);
         }
 
-        protected byte[] destruct(Message t)
+        protected byte[] destruct(MessageType t)
         {
             var payload = new byte[10];
             payload[0] = (byte)t;
@@ -30,7 +30,7 @@ namespace InetServer.Command
         }
         public override byte[] Destruct()
         {
-            return destruct(Message.Deposit);
+            return destruct(MessageType.Deposit);
         }
     }
 }

@@ -36,14 +36,14 @@ namespace InetServer
                     if (Disposed) return;
                     var buffer = new byte[20]; //TODO: Listen to end
                     int cnt = await Tcp.GetStream().ReadAsync(buffer, 0, buffer.Length);
-                    Console.WriteLine("Reading from Client: " + source);
+                    Console.WriteLine("[INFO] Reading from Client: " + source);
                     if (cnt < 1) break; // Client sent disconnect: RST packet most likely
                     if (buffer[0] < 127) Request?.Invoke(this, buffer);
                 }
             });
         }
 
-        public async void SendAsync(ICommand cmd)
+        public async void SendAsync(IMessage cmd)
         {
             var payload = cmd.Destruct();
             await Tcp.GetStream().WriteAsync(payload, 0, payload.Length);

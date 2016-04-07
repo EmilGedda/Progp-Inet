@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InetServer.Command
+namespace InetServer.Message
 {
     class Withdrawal : Deposit
     {
@@ -22,7 +22,7 @@ namespace InetServer.Command
 
         public override byte[] Destruct()
         {
-            byte[] payload = destruct(Message.Withdrawal);
+            byte[] payload = destruct(MessageType.Withdrawal);
             payload[9] = (byte)(Valid ? 1 : 0);
             return payload;
         }
