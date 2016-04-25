@@ -50,7 +50,9 @@
     <Compile Include="Account\AccountSerializer.cs" />
     <Compile Include="i18n\Language.cs" />
     <Compile Include="i18n\LanguageSerializer.cs" />
+    <Compile Include="Message\LanguagesAvailable.cs" />
     <Compile Include="Message\MessageTranslator.cs" />
+    <Compile Include="Message\Motd.cs" />
     <Compile Include="Message\Status.cs" />
     <Compile Include="Message\Withdrawal.cs" />
     <Compile Include="Network\Client.cs" />

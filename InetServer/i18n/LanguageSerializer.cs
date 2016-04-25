@@ -10,11 +10,21 @@ using System.Xml.Serialization;
 
 namespace InetServer.i18n
 {
-    internal class LanguageSerializer
+    public class LanguageSerializer
     {
+
         private const string Dir = "langs";
         private static readonly DataContractSerializer Xs = new DataContractSerializer(typeof(Language));
-        private List<Language> langs; 
+        private List<Language> langs;
+
+        private static LanguageSerializer instance;
+
+        private LanguageSerializer()
+        {
+            
+        }
+
+        public static LanguageSerializer Instance => instance ?? (instance = new LanguageSerializer());
 
         public List<Language> LoadAccounts()
         {
@@ -77,6 +87,23 @@ namespace InetServer.i18n
                     Xs.WriteObject(xw, a);
                 }
             }
+        }
+
+        public static byte[] ToByteArray(Language lang)
+        {
+            using (var xs = new MemoryStream())
+            using (var xw = new XmlTextWriter(xs, Encoding.UTF8))
+            {
+                Xs.WriteObject(xw, lang);
+                return xs.ToArray();
+            }
+        }
+
+        public static Language FromByteArray(byte[] p, int offset)
+        {
+            using (var ms = new MemoryStream(p, offset, p.Length - offset))
+            using (var xr = new XmlTextReader(ms))
+                return (Language)Xs.ReadObject(xr);
         }
         private static async Task<bool> GetIdleFile(string path)
         {

@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using InetServer.Message;
 
 namespace InetServer
 {
@@ -19,7 +20,7 @@ namespace InetServer
             ListenAsync().ContinueWith(task => Dispose());
         }
 
-        public Account Acc { get; private set; }
+        public Account Acc { get; set; }
         public bool LoggedIn => Acc != null;
         public TcpClient Tcp { get; }
         public bool Disposed { get; private set; }

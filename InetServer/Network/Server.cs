@@ -9,7 +9,7 @@ namespace InetServer
 {
     internal class Server : IDisposable
     {
-        private readonly string motd = "Welcome to bank X Y Z";
+        private string motd = "Welcome to bank X Y Z";
         private readonly List<Client> clients = new List<Client>();
         private readonly List<Account> accounts;
         private readonly List<Language> langs;
@@ -19,7 +19,7 @@ namespace InetServer
         public Server()
         {
             accounts = AccountSerializer.LoadAccounts();
-            langs = new LanguageSerializer().LoadAccounts();
+            langs = LanguageSerializer.Instance.LoadAccounts();
         }
 
         // ReSharper disable once UseObjectOrCollectionInitializer
@@ -36,7 +36,11 @@ namespace InetServer
                 c.Request += new MessageTranslator(new Dictionary<MessageType, MessageTranslator.CommandEventHandler>
                 {
                     {MessageType.Deposit, OnDeposit},
-                    {MessageType.Withdrawal, OnWithdrawal}
+                    {MessageType.Withdrawal, OnWithdrawal},
+                    {MessageType.Motd, OnMotd},
+                    {MessageType.Status, OnStatus},
+                    {MessageType.Login, OnLogin},
+                    {MessageType.LangsAvailable, OnLangsAvail}
                 }).OnRequest;
 
                 clients.Add(c);
@@ -45,15 +49,51 @@ namespace InetServer
 
         public StatusCode OnDeposit(Client c, IMessage d)
         {
-            c.Acc.Savings += ((Deposit) d).Amount;
+            int amt = ((Deposit) d).Amount;
+            if(amt < 0 ) return StatusCode.Fail;
+            try
+            {
+                c.Acc.Savings = checked(c.Acc.Savings + amt); //Check for overflow
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("[ERROR] Overflow occured on deposit by client: " + c.Acc);
+                return StatusCode.Fail;
+            }
+
             return StatusCode.Success;
         }
 
         public StatusCode OnWithdrawal(Client client, IMessage cmd)
         {
             var w = (Withdrawal) cmd;
-            if (!w.Valid) return StatusCode.InvalidCode;
+            if (!w.Valid || client.Acc.Savings < w.Amount) return StatusCode.Fail;
             client.Acc.Savings -= w.Amount;
+            return StatusCode.Success;
+        }
+
+        public StatusCode OnLogin(Client client, IMessage cmd)
+        {
+            var l = (Login) cmd;
+            var acc = accounts.FirstOrDefault(a => a.Cardnumber == l.Cardnumber && a.Pin == l.Pin);
+            if(acc == null) return StatusCode.InvalidPin;
+            client.Acc = acc;
+            return StatusCode.Success;
+        }
+        public StatusCode OnStatus(Client client, IMessage cmd) => StatusCode.Success;
+
+        public StatusCode OnMotd(Client client, IMessage cmd)
+        {
+            client.SendAsync(new Motd(motd));
+            return StatusCode.Success;
+        }
+
+        public StatusCode OnLangsAvail(Client client, IMessage cmd)
+        {
+            foreach(Language l in langs)
+                client.SendAsync(l);
+
+            client.SendAsync(new LanguagesAvailable());
             return StatusCode.Success;
         }
 

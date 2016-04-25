@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using InetServer.Message;
 
-namespace InetServer
+namespace InetServer.Message
 {
 
     public abstract class IMessage
@@ -20,7 +19,7 @@ namespace InetServer
 
         public static MessageType GetType(byte[] payload)
         {
-            return (MessageType)Enum.Parse(typeof (MessageType), payload[0].ToString());
+            return (MessageType)Enum.Parse(typeof(MessageType), payload[0].ToString());
         }
         public abstract byte[] Destruct();
     }
@@ -32,6 +31,6 @@ namespace InetServer
         Deposit,
         Withdrawal,
         Lang,
-        Transfer
+        LangsAvailable
     }
 }
