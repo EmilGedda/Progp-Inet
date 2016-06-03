@@ -17,6 +17,10 @@ namespace InetServer
             Tcp = client;
             var ipEndPoint = Tcp.Client.RemoteEndPoint as IPEndPoint;
             source = ipEndPoint?.ToString() ?? "unkown source";
+        }
+
+        public void StartListening()
+        {
             ListenAsync().ContinueWith(task => Dispose());
         }
 

@@ -9,7 +9,8 @@ namespace InetServer.Message
         private static readonly Dictionary<MessageType, Func<byte[], IMessage>> mapping = new Dictionary<MessageType, Func<byte[], IMessage>>
         {
             { MessageType.Deposit, x => new Deposit(x)},
-            { MessageType.Withdrawal, x => new Withdrawal(x)}
+            { MessageType.Withdrawal, x => new Withdrawal(x)},
+            { MessageType.LangsAvailable, x => new LanguagesAvailable(x) }
         };
 
         public static IMessage Create(MessageType c, byte[] payload)

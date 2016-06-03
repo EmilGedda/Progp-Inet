@@ -43,6 +43,8 @@ namespace InetServer
                     {MessageType.LangsAvailable, OnLangsAvail}
                 }).OnRequest;
 
+                c.StartListening();
+
                 clients.Add(c);
             }
         }
@@ -67,7 +69,7 @@ namespace InetServer
         public StatusCode OnWithdrawal(Client client, IMessage cmd)
         {
             var w = (Withdrawal) cmd;
-            if (!w.Valid || client.Acc.Savings < w.Amount) return StatusCode.Fail;
+            if (!w.Valid || client.Acc.Savings < w.Amount || w.Amount < 1) return StatusCode.Fail;
             client.Acc.Savings -= w.Amount;
             return StatusCode.Success;
         }
@@ -90,10 +92,10 @@ namespace InetServer
 
         public StatusCode OnLangsAvail(Client client, IMessage cmd)
         {
-            foreach(Language l in langs)
+            client.SendAsync(new LanguagesAvailable((byte)langs.Count));
+            foreach (Language l in langs)
                 client.SendAsync(l);
 
-            client.SendAsync(new LanguagesAvailable());
             return StatusCode.Success;
         }
 

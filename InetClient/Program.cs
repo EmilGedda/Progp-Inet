@@ -21,7 +21,7 @@ namespace InetClient
                 Console.Clear();
                 Console.Write("Connecting to server...");
                 client.Connect(IPAddress.Loopback, 420);
-                Send(new LanguagesAvailable());
+                Send(new LanguagesAvailable(5));
                 Console.Clear();
                 Console.Write("Enter cardnumber: ");
                 string cn = Console.ReadLine();
