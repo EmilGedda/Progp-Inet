@@ -9,7 +9,7 @@ namespace InetServer
 {
     internal class Server : IDisposable
     {
-        private string motd = "Welcome to bank X Y Z";
+        private Motd motd = new Motd();
         private readonly List<Client> clients = new List<Client>();
         private readonly List<Account> accounts;
         private readonly List<Language> langs;
@@ -84,7 +84,7 @@ namespace InetServer
 
         public StatusCode OnMotd(Client client, IMessage cmd)
         {
-            client.SendAsync(new Motd(motd));
+            client.SendAsync(new Motd(motd.Message));
             return StatusCode.Success;
         }
 

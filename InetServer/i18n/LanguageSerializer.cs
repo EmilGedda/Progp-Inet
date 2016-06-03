@@ -105,6 +105,7 @@ namespace InetServer.i18n
             using (var xr = new XmlTextReader(ms))
                 return (Language)Xs.ReadObject(xr);
         }
+
         private static async Task<bool> GetIdleFile(string path)
         {
             var attemptsMade = 0;

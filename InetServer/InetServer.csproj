@@ -53,6 +53,7 @@
     <Compile Include="Message\LanguagesAvailable.cs" />
     <Compile Include="Message\MessageTranslator.cs" />
     <Compile Include="Message\Motd.cs" />
+    <Compile Include="Message\MotdSerializer.cs" />
     <Compile Include="Message\Status.cs" />
     <Compile Include="Message\Withdrawal.cs" />
     <Compile Include="Network\Client.cs" />
