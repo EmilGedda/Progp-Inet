@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace InetServer.Message
 {
-
+    [Serializable]
     public abstract class IMessage
     {
         private static readonly Dictionary<MessageType, Func<byte[], IMessage>> mapping = new Dictionary<MessageType, Func<byte[], IMessage>>
