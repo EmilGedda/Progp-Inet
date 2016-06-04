@@ -63,7 +63,7 @@ namespace InetServer
                         buffer[0] = msg[0];
                     }
                     if(OnServer)
-                        Console.WriteLine($"[INFO] Recieved message {IMessage.GetType(buffer)} from " + (!OnServer ? "Server" : "Client") + ": " + source);
+                        Logger.Info($"Recieved message {IMessage.GetType(buffer)} from " + (!OnServer ? "Server" : "Client") + ": " + source);
 
                     if (cnt < 1) break; // Client sent disconnect: RST packet most likely
                     if (buffer[0] < 127) 
@@ -81,7 +81,7 @@ namespace InetServer
         {
             var payload = cmd.Destruct();
             if (OnServer)
-                Console.WriteLine($"[INFO] Sent message {IMessage.GetType(payload)} to " + (!OnServer ? "Server" : "Client") + ": " + source);
+                Logger.Info($"Sent message {IMessage.GetType(payload)} to " + (!OnServer ? "Server" : "Client") + ": " + source);
             await Tcp.GetStream().WriteAsync(payload, 0, payload.Length);
         }
 
