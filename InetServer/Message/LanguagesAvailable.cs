@@ -24,7 +24,7 @@ namespace InetServer.Message
         public override byte[] Destruct()
         {
             var buf = new byte[10];
-            buf[0] = (byte) MessageType.LangsAvailable;
+            buf[0] = (byte) MessageType.LanguagesAvailable;
             buf[1] = Count;
             return buf;
         }

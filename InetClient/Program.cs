@@ -25,15 +25,16 @@ namespace InetClient
                 Console.Clear();
                 Console.Write("Connecting to server...");
                 TcpClient t = new TcpClient();
+                t.ReceiveBufferSize *= 8;
                 t.Connect(IPAddress.Loopback, 420);
-                client = new Client(t, true)
+                client = new Client(t, false)
                 {
                     Acc = new Account()
                 };
                 client.Request += new MessageTranslator(new Dictionary<MessageType, MessageTranslator.CommandEventHandler>
                 {
-                    {MessageType.Lang, OnLang},
-                    {MessageType.LangsAvailable, OnLangsAvailable},
+                    {MessageType.Language, OnLang},
+                    {MessageType.LanguagesAvailable, OnLangsAvailable},
                     {MessageType.Status, (client1, comm) => StatusCode.Success}
                     
                 }).OnRequest;
@@ -56,14 +57,12 @@ namespace InetClient
         private static StatusCode OnLangsAvailable(Client c, IMessage message)
         {
             languages = new ConcurrentBag<Language>();
-            Console.WriteLine("Prepare for languages");
             return StatusCode.Success;
         }
 
         private static StatusCode OnLang(Client c, IMessage message)
         {
             var lang = (Language) message;
-            Console.WriteLine("Recieved language");
             languages.Add(lang);
             return StatusCode.Success;
         }

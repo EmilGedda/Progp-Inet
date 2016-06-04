@@ -48,7 +48,7 @@ namespace InetServer.i18n
         {
             byte[] l = LanguageSerializer.ToByteArray(this);
             byte[] p = new byte[l.Length + 5];
-            p[0] = (byte) MessageType.Lang;
+            p[0] = (byte) MessageType.Language;
             var len = BitConverter.GetBytes(l.Length);
             Buffer.BlockCopy(len, 0, p, 1, len.Length);
             Buffer.BlockCopy(l, 0, p, 5, l.Length);

@@ -40,7 +40,7 @@ namespace InetServer
                     {MessageType.Motd, OnMotd},
                     {MessageType.Status, OnStatus},
                     {MessageType.Login, OnLogin},
-                    {MessageType.LangsAvailable, OnLangsAvail},
+                    {MessageType.LanguagesAvailable, OnLangsAvail},
                 }).OnRequest;
 
                 c.StartListening();
@@ -95,7 +95,7 @@ namespace InetServer
             client.SendAsync(new LanguagesAvailable((byte)langs.Count));
             foreach (Language l in langs)
             {
-                client.Send(l);
+                client.SendAsync(l);
             }
             return StatusCode.Success;
         }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using InetServer.Message;
+#pragma warning disable 4014
 
 namespace InetServer
 {
@@ -12,9 +13,10 @@ namespace InetServer
     {
         public delegate void RequestEventHandler(Client c, byte[] payload);
         
-        public Client(TcpClient client, bool isserver = false)
+
+        public Client(TcpClient client, bool isserver = true)
         {
-            IsServer = isserver;
+            OnServer = isserver;
             Tcp = client;
             Tcp.NoDelay = true;
             var ipEndPoint = Tcp.Client.RemoteEndPoint as IPEndPoint;
@@ -27,7 +29,7 @@ namespace InetServer
         }
 
         public Account Acc { get; set; }
-        public bool IsServer { get; }
+        public bool OnServer { get; } //Debug shit
         public bool LoggedIn => Acc != null;
         public TcpClient Tcp { get; }
         public bool Disposed { get; private set; }
@@ -54,19 +56,18 @@ namespace InetServer
                         buffer[0] = msg[0];
                         Buffer.BlockCopy(intbuf, 0, buffer, 1, 4);
                         await Tcp.GetStream().ReadAsync(buffer, 5, len);
-                        Console.WriteLine(buffer.Length);
                     }
                     else
                     {
                         cnt = await Tcp.GetStream().ReadAsync(buffer, 1, buffer.Length-1);
                         buffer[0] = msg[0];
                     }
-                    Console.WriteLine("[INFO] Reading from " + (IsServer ? "Server" : "Client") + ": " + source);
+                    if(OnServer)
+                        Console.WriteLine($"[INFO] Recieved message {IMessage.GetType(buffer)} from " + (!OnServer ? "Server" : "Client") + ": " + source);
+
                     if (cnt < 1) break; // Client sent disconnect: RST packet most likely
-                    if (buffer[0] < 127)
-                    {
-                        Request?.Invoke(this, buffer);
-                    }
+                    if (buffer[0] < 127) 
+                        Task.Run(() => Request?.Invoke(this, buffer));
                 }
             });
         }
@@ -79,6 +80,8 @@ namespace InetServer
         public async void SendAsync(IMessage cmd)
         {
             var payload = cmd.Destruct();
+            if (OnServer)
+                Console.WriteLine($"[INFO] Sent message {IMessage.GetType(payload)} to " + (!OnServer ? "Server" : "Client") + ": " + source);
             await Tcp.GetStream().WriteAsync(payload, 0, payload.Length);
         }
 

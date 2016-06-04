@@ -12,8 +12,8 @@ namespace InetServer.Message
         {
             { MessageType.Deposit, x => new Deposit(x)},
             { MessageType.Withdrawal, x => new Withdrawal(x)},
-            { MessageType.LangsAvailable, x => new LanguagesAvailable(x)},
-            { MessageType.Lang, x => new Language(x)},
+            { MessageType.LanguagesAvailable, x => new LanguagesAvailable(x)},
+            { MessageType.Language, x => new Language(x)},
 
         };
 
@@ -35,7 +35,7 @@ namespace InetServer.Message
         Motd,
         Deposit,
         Withdrawal,
-        Lang,
-        LangsAvailable
+        Language,
+        LanguagesAvailable
     }
 }
