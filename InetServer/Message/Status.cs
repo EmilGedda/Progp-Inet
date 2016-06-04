@@ -2,22 +2,22 @@
 
 namespace InetServer.Message
 {
-    internal class Status : IMessage
+    public class Status : IMessage
     {
         private readonly int cardnumber;
-        private readonly StatusCode code;
+        public StatusCode Code { get; }
         private readonly int savings;
 
         public Status(Account acc, StatusCode code)
         {
             cardnumber = acc.Cardnumber;
             savings = acc.Savings;
-            this.code = code;
+            this.Code = code;
         }
 
         public Status(byte[] payload)
         {
-            code = (StatusCode) Enum.Parse(typeof (StatusCode), payload[1].ToString());
+            Code = (StatusCode) Enum.Parse(typeof (StatusCode), payload[1].ToString());
             cardnumber = BitConverter.ToInt32(payload, 2);
             savings = BitConverter.ToInt32(payload, 6);
         }
@@ -26,7 +26,7 @@ namespace InetServer.Message
         {
             var payload = new byte[10];
             payload[0] = (byte) MessageType.Status;
-            payload[1] = (byte) code;
+            payload[1] = (byte) Code;
 
             var cn = BitConverter.GetBytes(cardnumber);
             for (var i = 2; i < cn.Length; i++)
@@ -46,6 +46,7 @@ namespace InetServer.Message
         Fail, // Unknown failure
         InvalidPin, // Login
         InvalidCode, // Withdrawal failure
+        LoginSuccess, // Login Success
         NotLoggedIn // Not logged in
     }
 }

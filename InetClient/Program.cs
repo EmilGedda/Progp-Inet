@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace InetClient
     class Program
     {
         private static InetServer.Client client;
+        private static ManualResetEvent mre = new ManualResetEvent(false);
         private static ConcurrentBag<Language> languages = new ConcurrentBag<Language>();
 
         // ReSharper disable once UseObjectOrCollectionInitializer
@@ -35,23 +37,52 @@ namespace InetClient
                 {
                     {MessageType.Language, OnLang},
                     {MessageType.LanguagesAvailable, OnLangsAvailable},
-                    {MessageType.Status, (client1, comm) => StatusCode.Success}
+                    {MessageType.Status, OnStatus}
                     
                 }).OnRequest;
-                client.Send(new LanguagesAvailable());
                 client.ListenAsync();
-                Console.WriteLine("Finished reading langs");
                 Console.ReadKey(true);
-                Console.Clear();
-                Console.Write("Enter cardnumber: ");
-                string cn = Console.ReadLine();
-                Console.Write("Enter PIN: ");
-                string pin = Console.ReadLine();
-            } catch (SocketException se) {
+                LogIn();
+                client.Send(new LanguagesAvailable());
+            }
+            catch (SocketException se) {
                 Console.WriteLine($"\n[EXCEPTION] {se.Message}");
             }
             
             Console.ReadKey();
+        }
+
+        private static void LogIn()
+        {
+            short pinInt = 0;
+            int cardInt = 0;
+            bool correctInput = false;
+            while (!correctInput)
+            {
+                while (!correctInput)
+                {
+                    Console.Write("Please enter your card number:");
+                    string cardnumber = Console.ReadLine();
+                    correctInput = Int32.TryParse(cardnumber, out cardInt);
+                }
+
+                correctInput = false;
+                while (!correctInput)
+                {
+                    Console.Write("Please enter your PIN code:");
+                    string pin = Console.ReadLine();
+                    correctInput = Int16.TryParse(pin, out pinInt);
+                }
+
+                var loginMsg = new Login(cardInt, pinInt);
+                client.SendAsync(loginMsg);
+            }
+        }
+
+        private static StatusCode OnStatus(Client c, IMessage message)
+        {
+            var msg = (Status) message;
+            return msg.Code;
         }
 
         private static StatusCode OnLangsAvailable(Client c, IMessage message)

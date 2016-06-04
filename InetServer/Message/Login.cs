@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InetServer.Message
 {
-    class Login : IMessage
+    public class Login : IMessage
     {
         public int Cardnumber { get; }
         public short Pin { get; }
