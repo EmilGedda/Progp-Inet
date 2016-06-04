@@ -69,7 +69,7 @@ namespace InetServer.i18n
                 affected.Mapping = changed.Mapping;
                 affected.Name = changed.Name;
             }
-            Console.WriteLine($" [WATCHER] Language {changed.Name} has been " + (affected == null ? "added" : "updated"));
+            Logger.Watcher($"Language {changed.Name} has been " + (affected == null ? "added" : "updated"));
             fsw.EnableRaisingEvents = true;
         }
 

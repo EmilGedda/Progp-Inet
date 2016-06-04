@@ -22,20 +22,20 @@ namespace InetServer.Message
         {
             if (!File.Exists(Filename))
             {
-                Console.WriteLine("[INFO] No Message of the Day found, creating default...");
+                Logger.Info("No message of the day found, creating default...");
                 File.WriteAllText(Filename, DefaultMotd);
-                Console.WriteLine("[INFO] Default Message of the Day created at " + Filename);
+                Logger.Info("Default message of the day created at " + Filename);
             }
 
             var fi = new FileInfo(Filename);
             if (fi.Length > 80)
-                Console.WriteLine("[WARNING] Message of the Day longer than 80 characters, will be cut!");
+                Logger.Warning("Message of the day longer than 80 characters, will be truncated");
 
             byte[] buffer = new byte[80];
             using (var fs = new FileStream(Filename, FileMode.Open, FileAccess.Read))
                 fs.Read(buffer, 0, 80);
             motd = Encoding.UTF8.GetString(buffer);
-            Console.WriteLine("[INFO] Message of the Day successfully loaded.");
+            Logger.Info("Message of the day successfully loaded");
             return motd;
         }
 
@@ -54,9 +54,12 @@ namespace InetServer.Message
 
         private async void OnWatcherChanged(object sender, FileSystemEventArgs args)
         {
+            var fsw = (FileSystemWatcher)sender;
+            fsw.EnableRaisingEvents = false;
             if (!await GetIdleFile(args.FullPath)) return;
             LoadMotd();
-            Console.WriteLine("[INFO] Message of the Day updated.");
+            Logger.Watcher("Message of the day updated");
+            fsw.EnableRaisingEvents = true;
         }
 
         private static async Task<bool> GetIdleFile(string path)

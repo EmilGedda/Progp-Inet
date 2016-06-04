@@ -95,7 +95,7 @@ namespace InetServer
         {
             if (Disposed) return;
             Disposed = true;
-            Console.WriteLine("[INFO] Client disconnected: " + source);
+            Logger.Info($"Client disconnected {source}");
             Tcp.Close();
         }
     }

@@ -20,13 +20,18 @@ namespace InetServer
         public static void Info(string str) => Instance.log(str, Status.INFO);
         public static void Error(string str) => Instance.log(str, Status.ERROR);
         public static void Critical(string str) => Instance.log(str, Status.CRITICAL);
+        public static void Watcher(string str) => Instance.log(str, Status.WATCHER);
+        public static void Warning(string str) => Instance.log(str, Status.WARNING);
+
 
         protected enum Status
         {
 
             INFO,
             ERROR,
-            CRITICAL
+            WARNING,
+            CRITICAL,
+            WATCHER
         }
     }
 }
