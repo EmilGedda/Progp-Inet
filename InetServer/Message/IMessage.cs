@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using InetServer.i18n;
 
 namespace InetServer.Message
 {
-    [Serializable]
+    [DataContract]
     public abstract class IMessage
     {
         private static readonly Dictionary<MessageType, Func<byte[], IMessage>> mapping = new Dictionary<MessageType, Func<byte[], IMessage>>
         {
             { MessageType.Deposit, x => new Deposit(x)},
             { MessageType.Withdrawal, x => new Withdrawal(x)},
-            { MessageType.LangsAvailable, x => new LanguagesAvailable(x) }
+            { MessageType.LangsAvailable, x => new LanguagesAvailable(x)},
+            { MessageType.Lang, x => new Language(x)},
+
         };
 
         public static IMessage Create(MessageType c, byte[] payload)

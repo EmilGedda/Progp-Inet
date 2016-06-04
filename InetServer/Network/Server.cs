@@ -40,7 +40,7 @@ namespace InetServer
                     {MessageType.Motd, OnMotd},
                     {MessageType.Status, OnStatus},
                     {MessageType.Login, OnLogin},
-                    {MessageType.LangsAvailable, OnLangsAvail}
+                    {MessageType.LangsAvailable, OnLangsAvail},
                 }).OnRequest;
 
                 c.StartListening();
@@ -52,7 +52,7 @@ namespace InetServer
         public StatusCode OnDeposit(Client c, IMessage d)
         {
             int amt = ((Deposit) d).Amount;
-            if(amt < 0 ) return StatusCode.Fail;
+            if(amt < 0) return StatusCode.Fail;
             try
             {
                 c.Acc.Savings = checked(c.Acc.Savings + amt); //Check for overflow
@@ -94,8 +94,9 @@ namespace InetServer
         {
             client.SendAsync(new LanguagesAvailable((byte)langs.Count));
             foreach (Language l in langs)
-                client.SendAsync(l);
-
+            {
+                client.Send(l);
+            }
             return StatusCode.Success;
         }
 

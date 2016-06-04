@@ -91,18 +91,17 @@ namespace InetServer.i18n
 
         public static byte[] ToByteArray(Language lang)
         {
-            using (var xs = new MemoryStream())
-            using (var xw = new XmlTextWriter(xs, Encoding.UTF8))
-            {
+            StringBuilder sb = new StringBuilder();
+            using (var xw = XmlWriter.Create(sb))
                 Xs.WriteObject(xw, lang);
-                return xs.ToArray();
-            }
+            return Encoding.UTF8.GetBytes(sb.ToString());
         }
 
-        public static Language FromByteArray(byte[] p, int offset)
+        public static Language FromByteArray(byte[] p, int offset, int count)
         {
-            using (var ms = new MemoryStream(p, offset, p.Length - offset))
-            using (var xr = new XmlTextReader(ms))
+            var str = Encoding.UTF8.GetString(p, offset, count);
+            using (var sr = new StringReader(str))
+            using (var xr = XmlReader.Create(sr))
                 return (Language)Xs.ReadObject(xr);
         }
         private static async Task<bool> GetIdleFile(string path)

@@ -26,7 +26,8 @@ namespace InetServer.i18n
 
         public Language(byte[] p)
         {
-            var l = LanguageSerializer.FromByteArray(p, 1);
+            int len = BitConverter.ToInt32(p, 1);
+            var l = LanguageSerializer.FromByteArray(p, 5, len);
             Name = l.Name;
             Code = l.Code;
             Mapping = l.Mapping;
@@ -46,9 +47,11 @@ namespace InetServer.i18n
         public override byte[] Destruct()
         {
             byte[] l = LanguageSerializer.ToByteArray(this);
-            byte[] p = new byte[l.Length + 1];
+            byte[] p = new byte[l.Length + 5];
             p[0] = (byte) MessageType.Lang;
-            Buffer.BlockCopy(l, 0, p, 1, l.Length);
+            var len = BitConverter.GetBytes(l.Length);
+            Buffer.BlockCopy(len, 0, p, 1, len.Length);
+            Buffer.BlockCopy(l, 0, p, 5, l.Length);
             return p;
         }
     }

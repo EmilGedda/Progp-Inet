@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using InetServer;
 using InetServer.i18n;
 using InetServer.Message;
 
@@ -12,32 +15,57 @@ namespace InetClient
 {
     class Program
     {
-        private static TcpClient client = new TcpClient();
-        private static List<Language> languages = new List<Language>();
+        private static InetServer.Client client;
+        private static ConcurrentBag<Language> languages = new ConcurrentBag<Language>();
 
+        // ReSharper disable once UseObjectOrCollectionInitializer
         private static void Main(string[] args)
         {
             try {
                 Console.Clear();
                 Console.Write("Connecting to server...");
-                client.Connect(IPAddress.Loopback, 420);
-                Send(new LanguagesAvailable(5));
+                TcpClient t = new TcpClient();
+                t.Connect(IPAddress.Loopback, 420);
+                client = new Client(t, true)
+                {
+                    Acc = new Account()
+                };
+                client.Request += new MessageTranslator(new Dictionary<MessageType, MessageTranslator.CommandEventHandler>
+                {
+                    {MessageType.Lang, OnLang},
+                    {MessageType.LangsAvailable, OnLangsAvailable},
+                    {MessageType.Status, (client1, comm) => StatusCode.Success}
+                    
+                }).OnRequest;
+                client.Send(new LanguagesAvailable());
+                client.ListenAsync();
+                Console.WriteLine("Finished reading langs");
+                Console.ReadKey(true);
                 Console.Clear();
                 Console.Write("Enter cardnumber: ");
                 string cn = Console.ReadLine();
                 Console.Write("Enter PIN: ");
                 string pin = Console.ReadLine();
             } catch (SocketException se) {
-                Console.WriteLine($"\n [EXCEPTION] {se.Message}");
+                Console.WriteLine($"\n[EXCEPTION] {se.Message}");
             }
-
-            client.Close();
+            
             Console.ReadKey();
         }
-        private static void Send(IMessage cmd)
+
+        private static StatusCode OnLangsAvailable(Client c, IMessage message)
         {
-            var payload = cmd.Destruct();
-            client.GetStream().Write(payload, 0, payload.Length);
+            languages = new ConcurrentBag<Language>();
+            Console.WriteLine("Prepare for languages");
+            return StatusCode.Success;
+        }
+
+        private static StatusCode OnLang(Client c, IMessage message)
+        {
+            var lang = (Language) message;
+            Console.WriteLine("Recieved language");
+            languages.Add(lang);
+            return StatusCode.Success;
         }
     }
 }

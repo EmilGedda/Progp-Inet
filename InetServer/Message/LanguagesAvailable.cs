@@ -23,7 +23,10 @@ namespace InetServer.Message
         // Empty placeholder, since the server sends all languages at once upon request.
         public override byte[] Destruct()
         {
-            return new[] {(byte) MessageType.LangsAvailable, Count};
+            var buf = new byte[10];
+            buf[0] = (byte) MessageType.LangsAvailable;
+            buf[1] = Count;
+            return buf;
         }
     }
 }
