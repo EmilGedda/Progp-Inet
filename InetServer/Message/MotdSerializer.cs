@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,8 +24,12 @@ namespace InetServer.Message
             {
                 Console.WriteLine("[INFO] No Message of the Day found, creating default...");
                 File.WriteAllText(Filename, DefaultMotd);
-                Console.WriteLine("[INFO] Default Message of the Day created.");
+                Console.WriteLine("[INFO] Default Message of the Day created at " + Filename);
             }
+
+            var fi = new FileInfo(Filename);
+            if (fi.Length > 80)
+                Console.WriteLine("[WARNING] Message of the Day longer than 80 characters, will be cut!");
 
             byte[] buffer = new byte[80];
             using (var fs = new FileStream(Filename, FileMode.Open, FileAccess.Read))
