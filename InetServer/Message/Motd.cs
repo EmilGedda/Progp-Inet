@@ -10,6 +10,12 @@ namespace InetServer.Message
     {
         public string Message { get; }
 
+        public Motd()
+        {
+            MotdSerializer serializer = new MotdSerializer();
+            Message = serializer.LoadMotd();
+        }
+
         public Motd(string msg)
         {
             Message = msg;
