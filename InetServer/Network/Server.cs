@@ -27,12 +27,12 @@ namespace InetServer
         public async void Listen()
         {
             listener.Start();
-            Console.WriteLine("[INFO] Server started on " + (listener.LocalEndpoint as IPEndPoint));
+            Logger.Info($"Server started on {listener.LocalEndpoint as IPEndPoint}");
             while (true)
             {
                 var tcp = await listener.AcceptTcpClientAsync();
                 var c = new Client(tcp);
-                Console.WriteLine("[INFO] New connection from " + (tcp.Client.RemoteEndPoint as IPEndPoint));
+                Logger.Info($"New connection from {tcp.Client.RemoteEndPoint as IPEndPoint}");
                 c.Request += new MessageTranslator(new Dictionary<MessageType, MessageTranslator.CommandEventHandler>
                 {
                     {MessageType.Deposit, OnDeposit},
@@ -59,7 +59,7 @@ namespace InetServer
             }
             catch (OverflowException)
             {
-                Console.WriteLine("[ERROR] Overflow occured on deposit by client: " + c.Acc);
+                Logger.Error($"Overflow occured on deposit by client: {c.Acc}");
                 return StatusCode.Fail;
             }
 
@@ -102,10 +102,10 @@ namespace InetServer
 
         public void Dispose()
         {
-            Console.WriteLine("[INFO] Shutting down...");
+            Logger.Info("Shutting down...");
             AccountSerializer.SaveAccounts(accounts);
             foreach (var c in clients.Where(c => !c.Disposed)) c.Dispose();
-            Console.WriteLine("[INFO] Server exited.");
+            Logger.Info("Server exited.");
         }
     }
 }
