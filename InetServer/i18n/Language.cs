@@ -17,7 +17,7 @@ namespace InetServer.i18n
         public string Code { get; set; }
         [DataMember]
         public Dictionary<Label, string> Mapping { get; set; }
-        public string Get(Label lbl) => Mapping[lbl];
+        public string this[Label lbl] => Mapping[lbl];
 
         public Language()
         {
@@ -26,7 +26,7 @@ namespace InetServer.i18n
 
         public Language(byte[] p)
         {
-            int len = BitConverter.ToInt32(p, 1);
+            var len = BitConverter.ToInt32(p, 1);
             var l = LanguageSerializer.FromByteArray(p, 5, len);
             Name = l.Name;
             Code = l.Code;

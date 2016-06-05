@@ -46,7 +46,8 @@ namespace InetServer.Message
         Fail, // Unknown failure
         InvalidPin, // Login
         InvalidCode, // Withdrawal failure
-        LoginSuccess, // Login Success
+        LoginSuccess, // Login success
+        LoginFail, // Login failure
         NotLoggedIn, // Not logged in
         Acknowledge // No more response
     }

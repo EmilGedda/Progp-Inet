@@ -78,7 +78,7 @@ namespace InetServer
         {
             var l = (Login) cmd;
             var acc = accounts.FirstOrDefault(a => a.Cardnumber == l.Cardnumber && a.Pin == l.Pin);
-            if(acc == null) return StatusCode.Fail;
+            if(acc == null) return StatusCode.LoginFail;
             client.Acc = acc;
             return StatusCode.LoginSuccess;
         }

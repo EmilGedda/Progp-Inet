@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using InetServer;
@@ -13,7 +14,9 @@ namespace InetClient
     {
         private static InetServer.Client client;
         private static BlockingCollection<StatusCode> bc = new BlockingCollection<StatusCode>();
-        private static ConcurrentBag<Language> languages = new ConcurrentBag<Language>();
+        private static ConcurrentDictionary<string, Language> languages = new ConcurrentDictionary<string, Language>();
+        private static Language currentLang;
+        private const string DefaultLang = "en-US";
 
         // ReSharper disable once UseObjectOrCollectionInitializer
         private static void Main(string[] args)
@@ -37,14 +40,28 @@ namespace InetClient
                     
                 }).OnRequest;
                 client.ListenAsync();
-                LogIn();
                 client.Send(new LanguagesAvailable());
+                LogIn();
+                SetLanguage(DefaultLang);
             }
             catch (SocketException se) {
                 Console.WriteLine($"\n[EXCEPTION] {se.Message}");
             }
             
             Console.ReadKey();
+        }
+
+        private static void SetLanguage(string code)
+        {
+            currentLang = languages[code];
+        }
+
+        private static void PrintMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("1. " + currentLang[Language.Label.Withdraw]);
+            Console.WriteLine("2. " + currentLang[Language.Label.Deposit]);
+            Console.WriteLine("3. " + currentLang[Language.Label.Exit]);
         }
 
         private static void LogIn()
@@ -76,26 +93,27 @@ namespace InetClient
                 if (status == StatusCode.LoginSuccess)
                     correctInput = true;
             }
-            Console.WriteLine("Insert menu here desu");
+            Console.WriteLine("Insert menu here desu.");
         }
 
         private static StatusCode OnStatus(Client c, IMessage message)
         {
             var msg = (Status) message;
-            bc.Add(msg.Code != StatusCode.LoginSuccess ? StatusCode.Fail : msg.Code);
+            if (msg.Code == StatusCode.LoginSuccess | msg.Code == StatusCode.LoginFail)
+                bc.Add(msg.Code);
             return StatusCode.Acknowledge;
         }
 
         private static StatusCode OnLangsAvailable(Client c, IMessage message)
         {
-            languages = new ConcurrentBag<Language>();
+            languages = new ConcurrentDictionary<string, Language>();
             return StatusCode.Success;
         }
 
         private static StatusCode OnLang(Client c, IMessage message)
         {
             var lang = (Language) message;
-            languages.Add(lang);
+            languages[lang.Code] = lang;
             return StatusCode.Success;
         }
     }
