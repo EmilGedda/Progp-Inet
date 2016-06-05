@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace InetServer.Message
+namespace InetServer.Messages
 {
-    public class Status : IMessage
+    public class Status : Message
     {
         private readonly int cardnumber;
         public StatusCode Code { get; }
         private readonly int savings;
 
-        public Status(Account acc, StatusCode code)
+        public Status(Account.Account acc, StatusCode code)
         {
             cardnumber = acc?.Cardnumber ?? 0;
             savings = acc?.Savings ?? 0;

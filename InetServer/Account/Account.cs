@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InetServer
+namespace InetServer.Account
 {
     [Serializable]
     public class Account

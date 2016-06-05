@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using InetServer.Network;
 
-namespace InetServer.Message
+namespace InetServer.Messages
 {
     public class MessageTranslator
     {
-        public delegate StatusCode CommandEventHandler(Client c, IMessage comm);
+        public delegate StatusCode CommandEventHandler(Client c, Message comm);
         private readonly Dictionary<MessageType, CommandEventHandler> handlers;
 
         public MessageTranslator(Dictionary<MessageType, CommandEventHandler> eventsHandlers)
@@ -15,8 +15,8 @@ namespace InetServer.Message
 
         public void OnRequest(Client client, byte[] payload)
         {
-            var ctype = IMessage.GetType(payload);
-            var cmd = IMessage.Create(ctype, payload);
+            var ctype = Message.GetType(payload);
+            var cmd = Message.Create(ctype, payload);
             StatusCode? code = null;
 
             if (ctype == MessageType.Login || client.LoggedIn)

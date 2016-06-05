@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace InetServer.Message
+namespace InetServer.Messages
 {
-    public class Login : IMessage
+    public class Login : Message
     {
         public int Cardnumber { get; }
         public short Pin { get; }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InetServer.Message
+﻿namespace InetServer.Messages
 {
-    public class LanguagesAvailable : IMessage
+    public class LanguagesAvailable : Message
     {
         public byte Count { get; }
 

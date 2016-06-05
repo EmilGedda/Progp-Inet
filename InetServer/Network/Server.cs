@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using InetServer.Account;
 using InetServer.i18n;
-using InetServer.Message;
+using InetServer.Messages;
 
 namespace InetServer.Network
 {
@@ -13,7 +14,7 @@ namespace InetServer.Network
     /// </summary>
     internal class Server : IDisposable
     {
-        private readonly List<Account> accounts;
+        private readonly List<Account.Account> accounts;
         private readonly List<Client> clients = new List<Client>();
         private readonly List<Language> langs;
 
@@ -80,7 +81,7 @@ namespace InetServer.Network
         /// <param name="c">The client which sent the message</param>
         /// <param name="d">The Deposit object as an IMessage</param>
         /// <returns>If the amount is positive and does not trigger a overflow a Success is returned, otherwise a Fail</returns>
-        public StatusCode OnDeposit(Client c, IMessage d)
+        public StatusCode OnDeposit(Client c, Message d)
         {
             var amt = ((Deposit) d).Amount;
             if (amt < 0)
@@ -107,7 +108,7 @@ namespace InetServer.Network
         /// <param name="client">The client which sent the message</param>
         /// <param name="cmd">The LanguagesAvailable as an IMessage</param>
         /// <returns>Success</returns>
-        public StatusCode OnLangsAvail(Client client, IMessage cmd)
+        public StatusCode OnLangsAvail(Client client, Message cmd)
         {
             client.SendAsync(new LanguagesAvailable((byte) langs.Count));
 
@@ -124,7 +125,7 @@ namespace InetServer.Network
         /// <param name="client">The client which sent the message</param>
         /// <param name="cmd">The Login object as an IMessage</param>
         /// <returns>Fail authorization failed, otherwise LoginSuccess</returns>
-        public StatusCode OnLogin(Client client, IMessage cmd)
+        public StatusCode OnLogin(Client client, Message cmd)
         {
             var l = (Login) cmd;
             var acc = accounts.FirstOrDefault(a => a.Cardnumber == l.Cardnumber && a.Pin == l.Pin);
@@ -143,7 +144,7 @@ namespace InetServer.Network
         /// <param name="client">The client which sent the message</param>
         /// <param name="cmd">The Motd message as an IMessage, this should not be used.</param>
         /// <returns>Success</returns>
-        public StatusCode OnMotd(Client client, IMessage cmd)
+        public StatusCode OnMotd(Client client, Message cmd)
         {
             client.SendAsync(motd);
             return StatusCode.Success;
@@ -157,7 +158,7 @@ namespace InetServer.Network
         /// <param name="client">The client which sent the message</param>
         /// <param name="cmd">The Status object as an IMessage</param>
         /// <returns>StatusCode.Acknowledge</returns>
-        public StatusCode OnStatus(Client client, IMessage cmd) => StatusCode.Acknowledge;
+        public StatusCode OnStatus(Client client, Message cmd) => StatusCode.Acknowledge;
 
         /// <summary>
         ///     Whenever a Withdrawal message was recieved by the server
@@ -165,7 +166,7 @@ namespace InetServer.Network
         /// <param name="client">The client which sent the message</param>
         /// <param name="cmd">The Withdrawal object as an IMessage</param>
         /// <returns>Success if the withdrawal was successful and permitted, otherwise Fail</returns>
-        public StatusCode OnWithdrawal(Client client, IMessage cmd)
+        public StatusCode OnWithdrawal(Client client, Message cmd)
         {
             var w = (Withdrawal) cmd;
 

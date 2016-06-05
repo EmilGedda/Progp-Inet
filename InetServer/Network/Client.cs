@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using InetServer.Message;
+using InetServer.Messages;
 
 #pragma warning disable 4014
 
@@ -33,7 +33,7 @@ namespace InetServer.Network
             source = ipEndPoint?.ToString() ?? "unkown source";
         }
 
-        public Account Acc { get; set; }
+        public Account.Account Acc { get; set; }
         public bool OnServer { get; }
         public bool LoggedIn => Acc != null;
         public TcpClient Tcp { get; }
@@ -90,7 +90,7 @@ namespace InetServer.Network
                         buffer[0] = msg[0];
                     }
                     if (OnServer)
-                        Logger.Info($"Recieved message {Message.Message.GetType(buffer)} from "
+                        Logger.Info($"Recieved message {Message.GetType(buffer)} from "
                                     + (!OnServer ? "Server" : "Client")
                                     + ": " + source);
 
@@ -101,7 +101,7 @@ namespace InetServer.Network
             });
         }
 
-        public void Login(Account acc) => Acc = acc;
+        public void Login(Account.Account acc) => Acc = acc;
 
         public event RequestEventHandler Request;
 
@@ -110,7 +110,7 @@ namespace InetServer.Network
         ///     TODO: deprecate this.
         /// </summary>
         /// <param name="cmd">The message to be sent</param>
-        public void Send(Message.Message cmd)
+        public void Send(Message cmd)
         {
             var payload = cmd.Destruct();
             Tcp.GetStream().Write(payload, 0, payload.Length);
@@ -120,11 +120,11 @@ namespace InetServer.Network
         ///     Send a message asynchronously to the client.
         /// </summary>
         /// <param name="cmd"></param>
-        public async void SendAsync(Message.Message cmd)
+        public async void SendAsync(Message cmd)
         {
             var payload = cmd.Destruct();
             if (OnServer)
-                Logger.Info($"Sent message {Message.Message.GetType(payload)} to "
+                Logger.Info($"Sent message {Message.GetType(payload)} to "
                             + (!OnServer ? "Server" : "Client")
                             + ": " + source);
             await Tcp.GetStream().WriteAsync(payload, 0, payload.Length);

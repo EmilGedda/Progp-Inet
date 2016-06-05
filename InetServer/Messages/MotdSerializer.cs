@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InetServer.Message
+namespace InetServer.Messages
 {
     public class MotdSerializer
     {

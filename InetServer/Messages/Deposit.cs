@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace InetServer.Message
+namespace InetServer.Messages
 {
-    public class Deposit : IMessage
+    public class Deposit : Message
     {
      
         public int Amount { get; }

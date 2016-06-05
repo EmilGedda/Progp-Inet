@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Serialization;
 
-namespace InetServer
+namespace InetServer.Account
 {
     internal static class AccountSerializer
     {

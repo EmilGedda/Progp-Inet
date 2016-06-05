@@ -4,12 +4,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using InetServer.Message;
+using InetServer.Messages;
 
 namespace InetServer.i18n
 {
     [DataContract]
-    public class Language : IMessage
+    public class Language : Message
     {
         [DataMember]
         public string Name { get; set; }

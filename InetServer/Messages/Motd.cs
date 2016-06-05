@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace InetServer.Message
+namespace InetServer.Messages
 {
-    class Motd : IMessage
+    class Motd : Message
     {
         public string Message { get; }
 
