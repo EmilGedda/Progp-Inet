@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace InetServer.Message
 {
@@ -22,7 +23,7 @@ namespace InetServer.Message
                 code = handlers[ctype]?.Invoke(client, cmd);
 
             if(code != StatusCode.Acknowledge)
-                client.SendAsync(new Status(client.Acc, code ?? StatusCode.Fail));
+                client.Send(new Status(client.Acc, code ?? StatusCode.Fail));
             
         }
     }

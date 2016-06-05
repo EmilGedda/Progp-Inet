@@ -82,13 +82,8 @@ namespace InetClient
         private static StatusCode OnStatus(Client c, IMessage message)
         {
             var msg = (Status) message;
-            if (msg.Code != StatusCode.LoginSuccess)
-            {
-                bc.Add(StatusCode.Fail);
-                return StatusCode.Fail;
-            }
-            bc.Add(msg.Code);
-            return msg.Code;
+            bc.Add(msg.Code != StatusCode.LoginSuccess ? StatusCode.Fail : msg.Code);
+            return StatusCode.Acknowledge;
         }
 
         private static StatusCode OnLangsAvailable(Client c, IMessage message)

@@ -10,9 +10,9 @@ namespace InetServer.Message
 
         public Status(Account acc, StatusCode code)
         {
-            cardnumber = acc.Cardnumber;
-            savings = acc.Savings;
-            this.Code = code;
+            cardnumber = acc?.Cardnumber ?? 0;
+            savings = acc?.Savings ?? 0;
+            Code = code;
         }
 
         public Status(byte[] payload)
