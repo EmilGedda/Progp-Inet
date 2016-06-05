@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using InetServer;
@@ -43,6 +42,7 @@ namespace InetClient
                 client.Send(new LanguagesAvailable());
                 LogIn();
                 SetLanguage(DefaultLang);
+                PrintMenu();
             }
             catch (SocketException se) {
                 Console.WriteLine($"\n[EXCEPTION] {se.Message}");
@@ -51,10 +51,7 @@ namespace InetClient
             Console.ReadKey();
         }
 
-        private static void SetLanguage(string code)
-        {
-            currentLang = languages[code];
-        }
+        private static void SetLanguage(string code) => currentLang = languages[code];
 
         private static void PrintMenu()
         {

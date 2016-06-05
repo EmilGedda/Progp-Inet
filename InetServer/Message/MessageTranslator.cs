@@ -19,8 +19,10 @@ namespace InetServer.Message
             var cmd = IMessage.Create(ctype, payload);
             StatusCode? code = null;
 
-            if (ctype == MessageType.Login || client.LoggedIn)
+            if (ctype == MessageType.Login || client.LoggedIn || ctype == MessageType.Motd || ctype == MessageType.LanguagesAvailable)
                 code = handlers[ctype]?.Invoke(client, cmd);
+            else
+                Logger.Warning("Unauthorized access by client.");
 
             if(code != StatusCode.Acknowledge)
                 client.Send(new Status(client.Acc, code ?? StatusCode.Fail));
