@@ -86,9 +86,12 @@ namespace InetServer.Network
             if (amt < 0)
                 return StatusCode.Fail;
 
-            try {
+            try
+            {
                 c.Acc.Savings = checked(c.Acc.Savings + amt); //Check for overflow
-            } catch (OverflowException) {
+            }
+            catch (OverflowException)
+            {
                 Logger.Error($"Overflow occured on deposit by client: {c.Acc}");
                 return StatusCode.Fail;
             }
@@ -97,19 +100,20 @@ namespace InetServer.Network
         }
 
         /// <summary>
-        ///     Whenever a Withdrawal message was recieved by the server
+        ///     When a client requests all languages, this triggers and replies with all stored languages,
+        ///     the server first sends the count of all languages as a LanguageAvailable message, however this
+        ///     is not used by the client (yet).
         /// </summary>
         /// <param name="client">The client which sent the message</param>
-        /// <param name="cmd">The Withdrawal object as an IMessage</param>
-        /// <returns>Success if the withdrawal was successful and permitted, otherwise Fail</returns>
-        public StatusCode OnWithdrawal(Client client, IMessage cmd)
+        /// <param name="cmd">The LanguagesAvailable as an IMessage</param>
+        /// <returns>Success</returns>
+        public StatusCode OnLangsAvail(Client client, IMessage cmd)
         {
-            var w = (Withdrawal) cmd;
+            client.SendAsync(new LanguagesAvailable((byte) langs.Count));
 
-            if (!w.Valid || client.Acc.Savings < w.Amount || w.Amount < 1)
-                return StatusCode.Fail;
+            foreach (var l in langs)
+                client.SendAsync(l);
 
-            client.Acc.Savings -= w.Amount;
             return StatusCode.Success;
         }
 
@@ -133,16 +137,6 @@ namespace InetServer.Network
         }
 
         /// <summary>
-        ///     Whenever a Status message was recieved by the server
-        ///     The server answers silently by acknowledging it.
-        ///     TODO: Could be extended for some serious error handling.
-        /// </summary>
-        /// <param name="client">The client which sent the message</param>
-        /// <param name="cmd">The Status object as an IMessage</param>
-        /// <returns>StatusCode.Acknowledge</returns>
-        public StatusCode OnStatus(Client client, IMessage cmd) => StatusCode.Acknowledge;
-
-        /// <summary>
         ///     Whenever a Motd message was recieved by the server.
         ///     The server responds by sending the current Motd back to the client.
         /// </summary>
@@ -156,20 +150,29 @@ namespace InetServer.Network
         }
 
         /// <summary>
-        ///     When a client requests all languages, this triggers and replies with all stored languages,
-        ///     the server first sends the count of all languages as a LanguageAvailable message, however this
-        ///     is not used by the client (yet).
+        ///     Whenever a Status message was recieved by the server
+        ///     The server answers silently by acknowledging it.
+        ///     TODO: Could be extended for some serious error handling.
         /// </summary>
         /// <param name="client">The client which sent the message</param>
-        /// <param name="cmd">The LanguagesAvailable as an IMessage</param>
-        /// <returns>Success</returns>
-        public StatusCode OnLangsAvail(Client client, IMessage cmd)
+        /// <param name="cmd">The Status object as an IMessage</param>
+        /// <returns>StatusCode.Acknowledge</returns>
+        public StatusCode OnStatus(Client client, IMessage cmd) => StatusCode.Acknowledge;
+
+        /// <summary>
+        ///     Whenever a Withdrawal message was recieved by the server
+        /// </summary>
+        /// <param name="client">The client which sent the message</param>
+        /// <param name="cmd">The Withdrawal object as an IMessage</param>
+        /// <returns>Success if the withdrawal was successful and permitted, otherwise Fail</returns>
+        public StatusCode OnWithdrawal(Client client, IMessage cmd)
         {
-            client.SendAsync(new LanguagesAvailable((byte) langs.Count));
+            var w = (Withdrawal) cmd;
 
-            foreach (var l in langs)
-                client.SendAsync(l);
+            if (!w.Valid || client.Acc.Savings < w.Amount || w.Amount < 1)
+                return StatusCode.Fail;
 
+            client.Acc.Savings -= w.Amount;
             return StatusCode.Success;
         }
     }

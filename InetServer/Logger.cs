@@ -19,6 +19,12 @@ namespace InetServer
         }
 
         private static Logger Instance => instance ?? (instance = new Logger());
+        public static void Critical(string str) => Instance.log(str, Status.Critical);
+        public static void Error(string str) => Instance.log(str, Status.Error);
+
+        public static void Info(string str) => Instance.log(str, Status.Info);
+        public static void Warning(string str) => Instance.log(str, Status.Warning);
+        public static void Watcher(string str) => Instance.log(str, Status.Watcher);
 
         /// <summary>
         ///     Log the given string and status-level. Provides a timestamp aswell, the timestamp is the time since the server
@@ -31,12 +37,6 @@ namespace InetServer
             var span = DateTime.Now - start;
             Console.WriteLine($"[{span.TotalSeconds:0.00}] {status.ToString().ToUpper()}: {str}");
         }
-
-        public static void Info(string str) => Instance.log(str, Status.Info);
-        public static void Error(string str) => Instance.log(str, Status.Error);
-        public static void Critical(string str) => Instance.log(str, Status.Critical);
-        public static void Watcher(string str) => Instance.log(str, Status.Watcher);
-        public static void Warning(string str) => Instance.log(str, Status.Warning);
 
         /// <summary>
         ///     The different status-levels provided by the class.
