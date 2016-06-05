@@ -47,6 +47,7 @@ namespace InetServer.Message
         InvalidPin, // Login
         InvalidCode, // Withdrawal failure
         LoginSuccess, // Login Success
-        NotLoggedIn // Not logged in
+        NotLoggedIn, // Not logged in
+        Acknowledge // No more response
     }
 }

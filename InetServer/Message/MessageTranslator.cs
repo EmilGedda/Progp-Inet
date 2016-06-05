@@ -17,12 +17,12 @@ namespace InetServer.Message
             var ctype = IMessage.GetType(payload);
             var cmd = IMessage.Create(ctype, payload);
             StatusCode? code = null;
-            if(ctype == MessageType.Login || client.LoggedIn)
+
+            if (ctype == MessageType.Login || client.LoggedIn)
                 code = handlers[ctype]?.Invoke(client, cmd);
-            
-            client.SendAsync(
-                new Status(client.Acc, code ?? StatusCode.Fail)
-            );
+
+            if(code != StatusCode.Acknowledge)
+                client.SendAsync(new Status(client.Acc, code ?? StatusCode.Fail));
             
         }
     }

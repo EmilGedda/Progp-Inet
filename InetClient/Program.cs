@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using InetServer;
 using InetServer.i18n;
 using InetServer.Message;
@@ -17,7 +12,7 @@ namespace InetClient
     class Program
     {
         private static InetServer.Client client;
-        private static ManualResetEvent mre = new ManualResetEvent(false);
+        private static BlockingCollection<StatusCode> bc = new BlockingCollection<StatusCode>();
         private static ConcurrentBag<Language> languages = new ConcurrentBag<Language>();
 
         // ReSharper disable once UseObjectOrCollectionInitializer
@@ -25,10 +20,11 @@ namespace InetClient
         {
             try {
                 Console.Clear();
-                Console.Write("Connecting to server...");
+                Console.WriteLine("Connecting to server...");
                 TcpClient t = new TcpClient();
                 t.ReceiveBufferSize *= 8;
                 t.Connect(IPAddress.Loopback, 420);
+                Console.WriteLine("Connection established to server.");
                 client = new Client(t, false)
                 {
                     Acc = new Account()
@@ -41,7 +37,6 @@ namespace InetClient
                     
                 }).OnRequest;
                 client.ListenAsync();
-                Console.ReadKey(true);
                 LogIn();
                 client.Send(new LanguagesAvailable());
             }
@@ -74,14 +69,25 @@ namespace InetClient
                     correctInput = Int16.TryParse(pin, out pinInt);
                 }
 
+                correctInput = false;
                 var loginMsg = new Login(cardInt, pinInt);
                 client.SendAsync(loginMsg);
+                var status = bc.Take();
+                if (status == StatusCode.LoginSuccess)
+                    correctInput = true;
             }
+            Console.WriteLine("DET FUNKADE DESU");
         }
 
         private static StatusCode OnStatus(Client c, IMessage message)
         {
             var msg = (Status) message;
+            if (msg.Code != StatusCode.LoginSuccess)
+            {
+                bc.Add(StatusCode.Fail);
+                return StatusCode.Fail;
+            }
+            bc.Add(msg.Code);
             return msg.Code;
         }
 
