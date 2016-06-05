@@ -28,11 +28,9 @@ namespace InetServer.Message
             payload[0] = (byte)MessageType.Login;
 
             var cn = BitConverter.GetBytes(Cardnumber);
-            for (var i = 1; i < cn.Length; i++)
-                payload[i] = cn[i];
+            Buffer.BlockCopy(cn, 0, payload, 1, cn.Length);
             var pin = BitConverter.GetBytes(this.Pin);
-            for (var i = 5; i < pin.Length; i++)
-                payload[i] = pin[i];
+            Buffer.BlockCopy(pin, 0, payload, 5, pin.Length);
 
             return payload;
         }

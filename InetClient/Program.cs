@@ -71,12 +71,12 @@ namespace InetClient
 
                 correctInput = false;
                 var loginMsg = new Login(cardInt, pinInt);
-                client.SendAsync(loginMsg);
+                client.Send(loginMsg);
                 var status = bc.Take();
                 if (status == StatusCode.LoginSuccess)
                     correctInput = true;
             }
-            Console.WriteLine("DET FUNKADE DESU");
+            Console.WriteLine("Insert menu here desu");
         }
 
         private static StatusCode OnStatus(Client c, IMessage message)

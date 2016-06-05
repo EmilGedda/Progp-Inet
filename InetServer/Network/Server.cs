@@ -77,11 +77,10 @@ namespace InetServer
         public StatusCode OnLogin(Client client, IMessage cmd)
         {
             var l = (Login) cmd;
-            Console.WriteLine(l);
             var acc = accounts.FirstOrDefault(a => a.Cardnumber == l.Cardnumber && a.Pin == l.Pin);
             if(acc == null) return StatusCode.InvalidPin;
             client.Acc = acc;
-            return StatusCode.Success;
+            return StatusCode.LoginSuccess;
         }
         public StatusCode OnStatus(Client client, IMessage cmd) => StatusCode.Acknowledge;
 
