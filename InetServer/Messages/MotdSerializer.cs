@@ -104,10 +104,10 @@ namespace InetServer.Messages
         {
             var fsw = (FileSystemWatcher) sender;
             fsw.EnableRaisingEvents = false;
+            Logger.Watcher("Message of the day updated");
             if (!await GetIdleFile(args.FullPath)) return;
             LoadMotd();
             Changed?.Invoke(this, motd);
-            Logger.Watcher("Message of the day updated");
             fsw.EnableRaisingEvents = true;
         }
     }

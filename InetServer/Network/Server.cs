@@ -190,6 +190,11 @@ namespace InetServer.Network
             return StatusCode.Success;
         }
 
+        /// <summary>
+        /// This triggers whenever the Motd-watcher updates the Motd
+        /// </summary>
+        /// <param name="sender">The MotdSerializer instanec</param>
+        /// <param name="newMotd">The updated Motd</param>
         public void OnMotdUpdate(object sender, Motd newMotd)
         {
             motd = newMotd;
