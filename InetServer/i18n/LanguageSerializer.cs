@@ -132,7 +132,7 @@ namespace InetServer.i18n
                         {Language.Label.InvalidInput, "Felaktig inmatning, vänligen försök igen"},
                         {Language.Label.InvalidMenuItem, "Felaktigt menyval, vänligen försök igen"},
                         {Language.Label.EnterAmount, "Skriv in summa"},
-                        {Language.Label.TransFail, "Transaktionen misslyckades. För att komma tillbaka till huvudmenyn, ange summa 0. Tryck valfri tangent för att fortsätta..."}
+                        {Language.Label.TransFail, "För att komma tillbaka till huvudmenyn, ange 0 i summman"}
                     }
                 },
                 new Language
@@ -153,7 +153,7 @@ namespace InetServer.i18n
                         {Language.Label.InvalidInput, "Invalid input, please try again"},
                         {Language.Label.InvalidMenuItem, "Invalid menu item chosen, please try again"},
                         {Language.Label.EnterAmount, "Enter amount"},
-                        {Language.Label.TransFail, "Transaction failed. To get back to main menu, enter amount 0. Press any key to continue..."}
+                        {Language.Label.TransFail, "To get back to main menu, enter 0 in amount"}
                     }
                 },
                 new Language
@@ -174,7 +174,7 @@ namespace InetServer.i18n
                         {Language.Label.InvalidInput, "無効入力, 再度お試しください"},
                         {Language.Label.InvalidMenuItem, "無効な選択、再度お試しください"},
                         {Language.Label.EnterAmount, "金額を入力してください"},
-                        {Language.Label.TransFail, "トランザクションが失敗しました。 メインメニューに戻り得るために0を入力してください。何かキーを押すと続行してください..."}
+                        {Language.Label.TransFail, "メインメニューに戻り得るために0を入力してください"}
                     }
                 },
                 new Language

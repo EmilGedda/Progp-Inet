@@ -218,6 +218,7 @@ namespace InetClient
                         ExitClient();
                         break;
                     default:
+                        Console.Clear();
                         Console.WriteLine(currentLang[Language.Label.InvalidMenuItem]);
                         break;
                 }
@@ -273,20 +274,21 @@ namespace InetClient
                 Console.WriteLine($"Savings: {lastStatus.Savings}$");
                 Console.WriteLine();
                 Console.WriteLine(currentLang[Language.Label.Withdraw]);
+                Console.WriteLine(currentLang[Language.Label.TransFail]);
                 Console.WriteLine(new string('-', 10));
                 int amount;
                 var valid = false;
                 GetCodeAmount(out amount, ref valid);
                 var withdrawal = new Withdrawal(amount, valid);
-                client.SendAsync(withdrawal);
-                lastStatus = bc.Take();
-                if (lastStatus.Code == StatusCode.WithdrawSuccess || amount == 0)
-                    correctInput = true;
-                else
-                { 
-                    Console.WriteLine(currentLang[Language.Label.TransFail]);
-                    Console.ReadKey(true);
+                if (amount > 0)
+                {
+                    client.SendAsync(withdrawal);
+                    lastStatus = bc.Take();
+                    if (lastStatus.Code == StatusCode.WithdrawSuccess || amount == 0)
+                        correctInput = true;
                 }
+                else
+                    correctInput = true;
                 Console.Clear();
             }
             return lastStatus;
