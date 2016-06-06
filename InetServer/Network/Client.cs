@@ -72,22 +72,28 @@ namespace InetServer.Network
                     var msg = new byte[1];
                     var buffer = new byte[10];
                     var cnt = await Tcp.GetStream().ReadAsync(msg, 0, 1);
-                    if (msg[0] == 5) // LanguagesAvailable == 5 -> Which is a variable length message
+                    switch (msg[0])
                     {
-                        var intbuf = new byte[4];
-                        // Read the next word in the packet which specifies the message length.
-                        await Tcp.GetStream().ReadAsync(intbuf, 0, 4);
-                        var len = BitConverter.ToInt32(intbuf, 0);
-                        Array.Resize(ref buffer, len + 1 + 4);
-                        buffer[0] = msg[0];
-                        Buffer.BlockCopy(intbuf, 0, buffer, 1, 4);
-                        // Read the rest of the message, now that we know the length.
-                        await Tcp.GetStream().ReadAsync(buffer, 5, len);
-                    }
-                    else
-                    {
-                        cnt = await Tcp.GetStream().ReadAsync(buffer, 1, buffer.Length - 1);
-                        buffer[0] = msg[0];
+                        case 5: //Language message
+                            var intbuf = new byte[4];
+                            // Read the next word in the packet which specifies the message length.
+                            await Tcp.GetStream().ReadAsync(intbuf, 0, 4);
+                            var len = BitConverter.ToInt32(intbuf, 0);
+                            Array.Resize(ref buffer, len + 1 + 4);
+                            buffer[0] = msg[0];
+                            Buffer.BlockCopy(intbuf, 0, buffer, 1, 4);
+                            // Read the rest of the message, now that we know the length.
+                            await Tcp.GetStream().ReadAsync(buffer, 5, len);
+                            break;
+                        case 2: // motd message
+                            Array.Resize(ref buffer, 81);
+                            await Tcp.GetStream().ReadAsync(buffer, 1, 80);
+                            buffer[0] = 2; //motd
+                            break;
+                        default: //anything else
+                            cnt = await Tcp.GetStream().ReadAsync(buffer, 1, buffer.Length - 1);
+                            buffer[0] = msg[0];
+                            break;
                     }
                     if (OnServer)
                         Logger.Info($"Recieved message {Message.GetType(buffer)} from "

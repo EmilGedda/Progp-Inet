@@ -20,7 +20,7 @@ namespace InetServer.Network
 
         // Create a listener on localhost:420
         private readonly TcpListener listener = TcpListener.Create(420);
-        private readonly Motd motd = new Motd();
+        private Motd motd;
 
         /// <summary>
         ///     Loads the IO-saved accounts and languages
@@ -29,6 +29,8 @@ namespace InetServer.Network
         {
             accounts = AccountSerializer.LoadAccounts();
             langs = LanguageSerializer.Instance.LoadAccounts();
+            motd = MotdSerializer.Instance.LoadMotd();
+            MotdSerializer.Instance.Changed += OnMotdUpdate;
         }
 
         /// <summary>
@@ -186,6 +188,15 @@ namespace InetServer.Network
             client.Acc.Savings -= w.Amount;
             Logger.Info($"Client {client} withdrew {w.Amount}$");
             return StatusCode.Success;
+        }
+
+        public void OnMotdUpdate(object sender, Motd newMotd)
+        {
+            motd = newMotd;
+            foreach (var client in clients)
+            {
+                client.SendAsync(newMotd);
+            }
         }
     }
 }

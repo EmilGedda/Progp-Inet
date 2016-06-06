@@ -9,10 +9,10 @@ namespace InetServer.Messages
     public class Status : Message
     {
         // The cardnumber of the sender, not really used at the moment
-        private readonly int cardnumber;
+        public int Cardnumber { get; }
 
         // The savings of the sender, after the transaction
-        private readonly int savings;
+        public int Savings { get; }
 
         /// <summary>
         ///     Constructs a Status object
@@ -21,8 +21,8 @@ namespace InetServer.Messages
         /// <param name="code">The response status of the initial request</param>
         public Status(Account.Account acc, StatusCode code)
         {
-            cardnumber = acc?.Cardnumber ?? 0;
-            savings = acc?.Savings ?? 0;
+            Cardnumber = acc?.Cardnumber ?? 0;
+            Savings = acc?.Savings ?? 0;
             Code = code;
         }
 
@@ -33,8 +33,8 @@ namespace InetServer.Messages
         public Status(byte[] payload)
         {
             Code = (StatusCode) Enum.Parse(typeof(StatusCode), payload[1].ToString());
-            cardnumber = BitConverter.ToInt32(payload, 2);
-            savings = BitConverter.ToInt32(payload, 6);
+            Cardnumber = BitConverter.ToInt32(payload, 2);
+            Savings = BitConverter.ToInt32(payload, 6);
         }
 
         public StatusCode Code { get; }
@@ -49,13 +49,11 @@ namespace InetServer.Messages
             payload[0] = (byte) MessageType.Status;
             payload[1] = (byte) Code;
 
-            var cn = BitConverter.GetBytes(cardnumber);
-            for (var i = 2; i < cn.Length; i++)
-                payload[i] = cn[i];
+            var cn = BitConverter.GetBytes(Cardnumber);
+            Buffer.BlockCopy(cn, 0, payload, 2, cn.Length);
 
-            var s = BitConverter.GetBytes(savings);
-            for (var i = 6; i < s.Length; i++)
-                payload[i] = s[i];
+            var s = BitConverter.GetBytes(Savings);
+            Buffer.BlockCopy(s, 0, payload, 6, s.Length);
 
             return payload;
         }

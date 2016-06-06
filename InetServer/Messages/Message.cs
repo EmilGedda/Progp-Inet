@@ -23,7 +23,8 @@ namespace InetServer.Messages
             {MessageType.LanguagesAvailable, x => new LanguagesAvailable(x)},
             {MessageType.Language, x => new Language(x)},
             {MessageType.Login, x => new Login(x)},
-            {MessageType.Status, x => new Status(x)}
+            {MessageType.Status, x => new Status(x)},
+            {MessageType.Motd, x => new Motd(x) }
         };
 
         /// <summary>

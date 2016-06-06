@@ -6,22 +6,14 @@ namespace InetServer.Messages
     /// <summary>
     ///     Represents the Motd as a message
     /// </summary>
-    internal class Motd : Message
+    public class Motd : Message
     {
-        /// <summary>
-        ///     Construct and loads the current motd
-        /// </summary>
-        public Motd()
-        {
-            var serializer = new MotdSerializer();
-            Message = serializer.LoadMotd();
-        }
 
         /// <summary>
-        ///     Construct a Motd object from a given string
+        ///     Construct a Motd object from a given string, defaults to the empty string.
         /// </summary>
         /// <param name="msg">The Motd of chosing</param>
-        public Motd(string msg)
+        public Motd(string msg = "")
         {
             Message = msg;
         }
@@ -32,7 +24,7 @@ namespace InetServer.Messages
         /// <param name="p">The byte[] representing a Motd object</param>
         public Motd(byte[] p)
         {
-            Message = Encoding.UTF8.GetString(p, 1, p.Length - 1);
+            Message = Encoding.UTF8.GetString(p, 1, 80);
         }
 
         public string Message { get; }
@@ -45,9 +37,9 @@ namespace InetServer.Messages
         public override byte[] Destruct()
         {
             var m = Encoding.UTF8.GetBytes(Message);
-            var b = new byte[m.Length + 1];
+            var b = new byte[81];
             b[0] = (byte) MessageType.Motd;
-            Buffer.BlockCopy(m, 0, b, 1, m.Length);
+            Buffer.BlockCopy(m, 0, b, 1, m.Length > 80 ? 80 : m.Length);
             return b;
         }
     }

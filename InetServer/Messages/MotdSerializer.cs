@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,12 +12,16 @@ namespace InetServer.Messages
     {
         private const string Filename = "motd.txt";
         private const string DefaultMotd = "Default MOTD";
-        private string motd;
+        private Motd motd;
+        private static MotdSerializer instance;
+        public static MotdSerializer Instance => instance ?? (instance = new MotdSerializer());
+        public delegate void MotdChangedEventHandler(object sender, Motd motd);
 
+        public event MotdChangedEventHandler Changed;
         /// <summary>
         ///     Load Motd and start a FileSystemWatcher to watch for changes in Filename
         /// </summary>
-        public MotdSerializer()
+        private MotdSerializer()
         {
             LoadMotd();
             EnableWatcher();
@@ -26,7 +31,7 @@ namespace InetServer.Messages
         ///     Load a motd from disk. If no file was found, a default Motd is supplied and saved.
         /// </summary>
         /// <returns>The current set Motd, if no earlier Motd was found a default one is used</returns>
-        public string LoadMotd()
+        public Motd LoadMotd()
         {
             if (!File.Exists(Filename))
             {
@@ -42,7 +47,7 @@ namespace InetServer.Messages
             var buffer = new byte[80];
             using (var fs = new FileStream(Filename, FileMode.Open, FileAccess.Read))
                 fs.Read(buffer, 0, 80);
-            motd = Encoding.UTF8.GetString(buffer);
+            motd = new Motd(Encoding.UTF8.GetString(buffer));
             Logger.Info("Message of the day successfully loaded");
             return motd;
         }
@@ -101,6 +106,7 @@ namespace InetServer.Messages
             fsw.EnableRaisingEvents = false;
             if (!await GetIdleFile(args.FullPath)) return;
             LoadMotd();
+            Changed?.Invoke(this, motd);
             Logger.Watcher("Message of the day updated");
             fsw.EnableRaisingEvents = true;
         }
