@@ -131,7 +131,7 @@ namespace InetServer.Network
             var acc = accounts.FirstOrDefault(a => a.Cardnumber == l.Cardnumber && a.Pin == l.Pin);
 
             if (acc == null)
-                return StatusCode.Fail;
+                return StatusCode.LoginFail;
 
             client.Acc = acc;
             return StatusCode.LoginSuccess;
