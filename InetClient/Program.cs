@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using InetServer;
+using InetServer.Account;
 using InetServer.i18n;
-using InetServer.Message;
+using InetServer.Messages;
 
 namespace InetClient
 {
@@ -79,20 +80,20 @@ namespace InetClient
             Console.WriteLine("Insert menu here desu");
         }
 
-        private static StatusCode OnStatus(Client c, IMessage message)
+        private static StatusCode OnStatus(Client c, Message message)
         {
             var msg = (Status) message;
             bc.Add(msg.Code != StatusCode.LoginSuccess ? StatusCode.Fail : msg.Code);
             return StatusCode.Acknowledge;
         }
 
-        private static StatusCode OnLangsAvailable(Client c, IMessage message)
+        private static StatusCode OnLangsAvailable(Client c, Message message)
         {
             languages = new ConcurrentBag<Language>();
             return StatusCode.Success;
         }
 
-        private static StatusCode OnLang(Client c, IMessage message)
+        private static StatusCode OnLang(Client c, Message message)
         {
             var lang = (Language) message;
             languages.Add(lang);
