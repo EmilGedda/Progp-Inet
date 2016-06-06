@@ -46,7 +46,7 @@ namespace InetServer.Network
         {
             if (Disposed) return;
             Disposed = true;
-            Logger.Info($"Client disconnected {source}");
+            Logger.Info($"Client disconnected {this}");
             Tcp.Close();
         }
 
@@ -92,7 +92,7 @@ namespace InetServer.Network
                     if (OnServer)
                         Logger.Info($"Recieved message {Message.GetType(buffer)} from "
                                     + (!OnServer ? "Server" : "Client")
-                                    + ": " + source);
+                                    + ": " + this);
 
                     if (cnt < 1) break; // Client sent disconnect: RST packet most likely
                     Task.Run(() => Request?.Invoke(this, buffer));
@@ -126,8 +126,17 @@ namespace InetServer.Network
             if (OnServer)
                 Logger.Info($"Sent message {Message.GetType(payload)} to "
                             + (!OnServer ? "Server" : "Client")
-                            + ": " + source);
+                            + ": " + this);
             await Tcp.GetStream().WriteAsync(payload, 0, payload.Length);
+        }
+
+        /// <summary>
+        /// Enables string representation of the client.
+        /// </summary>
+        /// <returns>The destination of this client as address:port</returns>
+        public override string ToString()
+        {
+            return source;
         }
 
         /// <summary>

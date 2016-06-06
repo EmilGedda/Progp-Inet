@@ -51,7 +51,7 @@ namespace InetClient
                 Menu();
             }
             catch (SocketException se) {
-                Console.WriteLine($"\n[EXCEPTION] {se.Message}");
+                Logger.Error("Unable to connect to server");
             }
             
             Console.ReadKey();
@@ -100,8 +100,8 @@ namespace InetClient
             Console.Clear();
             Console.WriteLine(currentLang[Language.Label.Withdraw] + ":\n");
             int amount;
-            bool valid;
-            GetCodeAmount(out amount, out valid);
+            bool valid = false;
+            GetCodeAmount(out amount, ref valid);
             var withdrawal = new Withdrawal(amount, valid);
             client.SendAsync(withdrawal);
         }
@@ -111,33 +111,29 @@ namespace InetClient
             Console.Clear();
             Console.WriteLine(currentLang[Language.Label.Deposit] + ":\n");
             int amount;
-            bool valid;
-            GetCodeAmount(out amount, out valid);
+            bool valid = true;
+            GetCodeAmount(out amount, ref valid);
             var deposit = new Deposit(amount);
             client.SendAsync(deposit);
         }
 
-        private static void GetCodeAmount(out int amount, out bool valid)
+        private static void GetCodeAmount(out int amount, ref bool valid)
         {
             bool correctInput = false;
             amount = 0;
-            while (!correctInput)
+            while (!correctInput && !valid)
             {
-                Console.WriteLine(currentLang[Language.Label.EnterCode]);
+                Console.Write(currentLang[Language.Label.EnterCode] + ": ");
                 string codeStr = Console.ReadLine();
                 int code = 0;
                 correctInput = Int32.TryParse(codeStr, out code);
-                if (!(code < 100 && code > 0 && code % 2 != 0))
-                    correctInput = false;
-                if (!correctInput)
-                    Console.WriteLine(currentLang[Language.Label.InvalidInput]);
+                if (code < 100 && code > 0 && code % 2 == 1)
+                    valid = true;
             }
-
-            valid = true;
             correctInput = false;
             while (!correctInput)
             {
-                Console.WriteLine(currentLang[Language.Label.EnterAmount]);
+                Console.Write(currentLang[Language.Label.EnterAmount] + ": ");
                 string amountStr = Console.ReadLine();
                 correctInput = Int32.TryParse(amountStr, out amount);
                 if (amount <= 0)

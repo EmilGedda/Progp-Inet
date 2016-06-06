@@ -53,9 +53,7 @@ namespace InetServer.Messages
             var payload = new byte[10];
             payload[0] = (byte) t;
             var amount = BitConverter.GetBytes(Amount);
-            for (var i = 1; i < amount.Length; i++)
-                payload[i] = amount[i];
-
+            Buffer.BlockCopy(amount, 0, payload, 1, amount.Length);
             return payload;
         }
     }

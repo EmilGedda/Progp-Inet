@@ -85,7 +85,10 @@ namespace InetServer.Network
         {
             var amt = ((Deposit) d).Amount;
             if (amt < 0)
+            {
+                Logger.Info($"Client {c} tried to deposit a negative amount: {amt}$");
                 return StatusCode.Fail;
+            }
 
             try
             {
@@ -93,10 +96,10 @@ namespace InetServer.Network
             }
             catch (OverflowException)
             {
-                Logger.Error($"Overflow occured on deposit by client: {c.Acc}");
+                Logger.Warning($"Transaction aborted. Overflow occured on deposit by client: {c}");
                 return StatusCode.Fail;
             }
-
+            Logger.Info($"Client {c} deposited {amt}$");
             return StatusCode.Success;
         }
 
@@ -131,9 +134,13 @@ namespace InetServer.Network
             var acc = accounts.FirstOrDefault(a => a.Cardnumber == l.Cardnumber && a.Pin == l.Pin);
 
             if (acc == null)
+            {
+                Logger.Info($"Client {client} failed to logged in to card number: {l.Cardnumber}");
                 return StatusCode.LoginFail;
+            }
 
             client.Acc = acc;
+            Logger.Info($"Client {client} logged in with card number: {acc.Cardnumber}");
             return StatusCode.LoginSuccess;
         }
 
@@ -171,9 +178,13 @@ namespace InetServer.Network
             var w = (Withdrawal) cmd;
 
             if (!w.Valid || client.Acc.Savings < w.Amount || w.Amount < 1)
+            {
+                Logger.Warning($"Client {client} tried to withdraw {w.Amount}$ but failed");
                 return StatusCode.Fail;
+            }
 
             client.Acc.Savings -= w.Amount;
+            Logger.Info($"Client {client} withdrew {w.Amount}$");
             return StatusCode.Success;
         }
     }
