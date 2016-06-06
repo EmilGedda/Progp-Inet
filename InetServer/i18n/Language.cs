@@ -60,6 +60,8 @@ namespace InetServer.i18n
         [DataMember]
         public Dictionary<Label, string> Mapping { get; set; }
 
+        public string this[Label lbl] => Mapping[lbl];
+
         /// <summary>
         ///     Destruct a Language into a byte array in preparation for sending to a Client
         /// </summary>
@@ -74,7 +76,5 @@ namespace InetServer.i18n
             Buffer.BlockCopy(l, 0, p, 5, l.Length);
             return p;
         }
-
-        public string this[Label lbl] => Mapping[lbl];
     }
 }

@@ -39,7 +39,7 @@ namespace InetServer.Messages
             if (fi.Length > 80)
                 Logger.Warning("Message of the day longer than 80 characters, will be truncated");
 
-            byte[] buffer = new byte[80];
+            var buffer = new byte[80];
             using (var fs = new FileStream(Filename, FileMode.Open, FileAccess.Read))
                 fs.Read(buffer, 0, 80);
             motd = Encoding.UTF8.GetString(buffer);
