@@ -137,20 +137,20 @@ namespace InetServer.Network
         }
 
         /// <summary>
-        /// Enables string representation of the client.
-        /// </summary>
-        /// <returns>The destination of this client as address:port</returns>
-        public override string ToString()
-        {
-            return source;
-        }
-
-        /// <summary>
         ///     Start the infinite listening-task of the client.
         /// </summary>
         public void StartListening()
         {
             ListenAsync().ContinueWith(task => Dispose());
+        }
+
+        /// <summary>
+        ///     Enables string representation of the client.
+        /// </summary>
+        /// <returns>The destination of this client as address:port</returns>
+        public override string ToString()
+        {
+            return source;
         }
     }
 }

@@ -8,12 +8,6 @@ namespace InetServer.Messages
     /// </summary>
     public class Status : Message
     {
-        // The cardnumber of the sender, not really used at the moment
-        public int Cardnumber { get; }
-
-        // The savings of the sender, after the transaction
-        public int Savings { get; }
-
         /// <summary>
         ///     Constructs a Status object
         /// </summary>
@@ -36,6 +30,12 @@ namespace InetServer.Messages
             Cardnumber = BitConverter.ToInt32(payload, 2);
             Savings = BitConverter.ToInt32(payload, 6);
         }
+
+        // The cardnumber of the sender, not really used at the moment
+        public int Cardnumber { get; }
+
+        // The savings of the sender, after the transaction
+        public int Savings { get; }
 
         public StatusCode Code { get; }
 

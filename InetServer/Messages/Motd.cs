@@ -8,7 +8,6 @@ namespace InetServer.Messages
     /// </summary>
     public class Motd : Message
     {
-
         /// <summary>
         ///     Construct a Motd object from a given string, defaults to the empty string.
         /// </summary>

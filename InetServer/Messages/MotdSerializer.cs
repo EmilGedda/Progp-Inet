@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,14 +9,13 @@ namespace InetServer.Messages
     /// </summary>
     public class MotdSerializer
     {
-        private const string Filename = "motd.txt";
-        private const string DefaultMotd = "Default MOTD";
-        private Motd motd;
-        private static MotdSerializer instance;
-        public static MotdSerializer Instance => instance ?? (instance = new MotdSerializer());
         public delegate void MotdChangedEventHandler(object sender, Motd motd);
 
-        public event MotdChangedEventHandler Changed;
+        private const string Filename = "motd.txt";
+        private const string DefaultMotd = "Default MOTD";
+        private static MotdSerializer instance;
+        private Motd motd;
+
         /// <summary>
         ///     Load Motd and start a FileSystemWatcher to watch for changes in Filename
         /// </summary>
@@ -26,6 +24,10 @@ namespace InetServer.Messages
             LoadMotd();
             EnableWatcher();
         }
+
+        public static MotdSerializer Instance => instance ?? (instance = new MotdSerializer());
+
+        public event MotdChangedEventHandler Changed;
 
         /// <summary>
         ///     Load a motd from disk. If no file was found, a default Motd is supplied and saved.

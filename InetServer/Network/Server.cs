@@ -160,6 +160,20 @@ namespace InetServer.Network
         }
 
         /// <summary>
+        ///     This triggers whenever the Motd-watcher updates the Motd
+        /// </summary>
+        /// <param name="sender">The MotdSerializer instanec</param>
+        /// <param name="newMotd">The updated Motd</param>
+        public void OnMotdUpdate(object sender, Motd newMotd)
+        {
+            motd = newMotd;
+            foreach (var client in clients)
+            {
+                client.SendAsync(newMotd);
+            }
+        }
+
+        /// <summary>
         ///     Whenever a Status message was recieved by the server
         ///     The server answers silently by acknowledging it.
         ///     TODO: Could be extended for some serious error handling.
@@ -188,20 +202,6 @@ namespace InetServer.Network
             client.Acc.Savings -= w.Amount;
             Logger.Info($"Client {client} withdrew {w.Amount}$");
             return StatusCode.Success;
-        }
-
-        /// <summary>
-        /// This triggers whenever the Motd-watcher updates the Motd
-        /// </summary>
-        /// <param name="sender">The MotdSerializer instanec</param>
-        /// <param name="newMotd">The updated Motd</param>
-        public void OnMotdUpdate(object sender, Motd newMotd)
-        {
-            motd = newMotd;
-            foreach (var client in clients)
-            {
-                client.SendAsync(newMotd);
-            }
         }
     }
 }

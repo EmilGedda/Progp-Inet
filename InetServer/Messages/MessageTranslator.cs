@@ -37,7 +37,8 @@ namespace InetServer.Messages
             var cmd = Message.Create(ctype, payload);
             StatusCode? code = null;
 
-            if (ctype == MessageType.Login || client.LoggedIn || ctype == MessageType.Motd || ctype == MessageType.LanguagesAvailable || ctype == MessageType.Status)
+            if (ctype == MessageType.Login || client.LoggedIn || ctype == MessageType.Motd ||
+                ctype == MessageType.LanguagesAvailable || ctype == MessageType.Status)
                 code = handlers[ctype]?.Invoke(client, cmd);
             else
                 Logger.Warning($"Unauthorized {ctype} by {client}!");
