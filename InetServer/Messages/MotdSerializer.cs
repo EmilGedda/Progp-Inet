@@ -67,7 +67,7 @@ namespace InetServer.Messages
         ///     This allows our watcher to wait a little for the previous locking process to exit cleanly.
         /// </summary>
         /// <param name="path">The file to lock</param>
-        /// <returns></returns>
+        /// <returns>The task containing the bool whether we could get an exclusive lock or not</returns>
         private static async Task<bool> GetIdleFile(string path)
         {
             var attemptsMade = 0;
