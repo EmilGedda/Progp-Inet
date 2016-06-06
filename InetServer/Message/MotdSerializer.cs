@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +28,7 @@ namespace InetServer.Message
             var fi = new FileInfo(Filename);
             if (fi.Length > 80)
                 Logger.Warning("Message of the day longer than 80 characters, will be truncated");
+
             byte[] buffer = new byte[80];
             using (var fs = new FileStream(Filename, FileMode.Open, FileAccess.Read))
                 fs.Read(buffer, 0, 80);
