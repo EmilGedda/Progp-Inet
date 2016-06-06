@@ -42,7 +42,10 @@ namespace InetServer.i18n
             Deposit,
             Transfer,
             EnterCode,
-            Language
+            Language,
+            InvalidInput,
+            InvalidMenuItem,
+            EnterAmount
         }
 
         public override byte[] Destruct()

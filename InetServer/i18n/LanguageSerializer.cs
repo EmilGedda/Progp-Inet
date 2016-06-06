@@ -141,7 +141,10 @@ namespace InetServer.i18n
                         { Language.Label.Deposit,           "Insättning" },
                         { Language.Label.Transfer,          "Överföring" },
                         { Language.Label.EnterCode,         "Skriv in kod" },
-                        { Language.Label.Language,          "Språk" }
+                        { Language.Label.Language,          "Språk" },
+                        { Language.Label.InvalidInput,      "Felaktig inmatning, vänligen försök igen" },
+                        { Language.Label.InvalidMenuItem,   "Felaktigt menyval, vänligen försök igen" },
+                        { Language.Label.EnterAmount,       "Skriv in summa" }
                     }
                 },
                 new Language
@@ -158,7 +161,10 @@ namespace InetServer.i18n
                         { Language.Label.Deposit,           "Deposit" },
                         { Language.Label.Transfer,          "Transfer" },
                         { Language.Label.EnterCode,         "Enter code" },
-                        { Language.Label.Language,          "Language" }
+                        { Language.Label.Language,          "Language" },
+                        { Language.Label.InvalidInput,      "Invalid input, please try again" },
+                        { Language.Label.InvalidMenuItem,   "Invalid menu item chosen, please try again" },
+                        { Language.Label.EnterAmount,       "Enter amount" }
                     }
                 },
                 new Language
@@ -169,13 +175,16 @@ namespace InetServer.i18n
                     {
                         { Language.Label.Login,             "ログイン" },
                         { Language.Label.Exit,              "エグジット" },
-                        { Language.Label.EnterCardnumber,   "カード番号を入力しますください" },
-                        { Language.Label.EnterPin,          "PIN番号を入力しますください" },
+                        { Language.Label.EnterCardnumber,   "カード番号を入力してください" },
+                        { Language.Label.EnterPin,          "PIN番号を入力してください" },
                         { Language.Label.Withdraw,          "撤退" },
                         { Language.Label.Deposit,           "保証金" },
                         { Language.Label.Transfer,          "移転" },
-                        { Language.Label.EnterCode,         "コードを入力しますください。" },
-                        { Language.Label.Language,          "言語" }
+                        { Language.Label.EnterCode,         "コードを入力ししてださい" },
+                        { Language.Label.Language,          "言語" },
+                        { Language.Label.InvalidInput,      "無効入力, 再度お試しください" },
+                        { Language.Label.InvalidMenuItem,   "無効な選択、再度お試しください" },
+                        { Language.Label.EnterAmount,       "金額を入力してください"}
                     }
                 },
                 new Language
@@ -192,7 +201,10 @@ namespace InetServer.i18n
                         { Language.Label.Deposit,           "Depositar" },
                         { Language.Label.Transfer,          "Transferir" },
                         { Language.Label.EnterCode,         "Digite o código" },
-                        { Language.Label.Language,          "Língua" }
+                        { Language.Label.Language,          "Língua" },
+                        { Language.Label.InvalidInput,      "Entrada inválida, por favor, tente novamente" },
+                        { Language.Label.InvalidMenuItem,   "Seleção inválida, por favor, tente novamente" },
+                        { Language.Label.EnterAmount,       "Digite a quantidade" }
                     }
                 }
             };

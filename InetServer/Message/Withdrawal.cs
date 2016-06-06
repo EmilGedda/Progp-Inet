@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InetServer.Message
 {
-    class Withdrawal : Deposit
+    public class Withdrawal : Deposit
     {
         public bool Valid { get; }
 
