@@ -131,7 +131,8 @@ namespace InetServer.i18n
                         {Language.Label.Language, "Språk"},
                         {Language.Label.InvalidInput, "Felaktig inmatning, vänligen försök igen"},
                         {Language.Label.InvalidMenuItem, "Felaktigt menyval, vänligen försök igen"},
-                        {Language.Label.EnterAmount, "Skriv in summa"}
+                        {Language.Label.EnterAmount, "Skriv in summa"},
+                        {Language.Label.TransFail, "Transaktionen misslyckades. För att komma tillbaka till huvudmenyn, ange summa 0. Tryck valfri tangent för att fortsätta..."}
                     }
                 },
                 new Language
@@ -151,7 +152,8 @@ namespace InetServer.i18n
                         {Language.Label.Language, "Language"},
                         {Language.Label.InvalidInput, "Invalid input, please try again"},
                         {Language.Label.InvalidMenuItem, "Invalid menu item chosen, please try again"},
-                        {Language.Label.EnterAmount, "Enter amount"}
+                        {Language.Label.EnterAmount, "Enter amount"},
+                        {Language.Label.TransFail, "Transaction failed. To get back to main menu, enter amount 0. Press any key to continue..."}
                     }
                 },
                 new Language
@@ -171,7 +173,8 @@ namespace InetServer.i18n
                         {Language.Label.Language, "言語"},
                         {Language.Label.InvalidInput, "無効入力, 再度お試しください"},
                         {Language.Label.InvalidMenuItem, "無効な選択、再度お試しください"},
-                        {Language.Label.EnterAmount, "金額を入力してください"}
+                        {Language.Label.EnterAmount, "金額を入力してください"},
+                        {Language.Label.TransFail, "トランザクションが失敗しました。 メインメニューに戻り得るために0を入力してください。何かキーを押すと続行してください..."}
                     }
                 },
                 new Language
@@ -191,7 +194,8 @@ namespace InetServer.i18n
                         {Language.Label.Language, "Língua"},
                         {Language.Label.InvalidInput, "Entrada inválida, por favor, tente novamente"},
                         {Language.Label.InvalidMenuItem, "Seleção inválida, por favor, tente novamente"},
-                        {Language.Label.EnterAmount, "Digite a quantidade"}
+                        {Language.Label.EnterAmount, "Digite a quantidade"},
+                        {Language.Label.TransFail, "Falha na transação. Para voltar ao menu principal, digite como quantidade 0. pressione qualquer tecla para continuar..."}
                     }
                 }
             };

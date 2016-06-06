@@ -27,7 +27,8 @@ namespace InetServer.i18n
             Language,
             InvalidInput,
             InvalidMenuItem,
-            EnterAmount
+            EnterAmount,
+            TransFail
         }
 
         /// <summary>

@@ -66,11 +66,13 @@ namespace InetServer.Messages
     {
         Success, // Generic success
         Fail, // Unknown failure
-        InvalidPin, // Login
-        InvalidCode, // Withdrawal failure
         LoginSuccess, // Login success
         LoginFail, // Login failure
         NotLoggedIn, // Not logged in
-        Acknowledge // No more response
+        Acknowledge, // No more response
+        DepositSuccess, // Deposit success
+        DepositFail, // Deposit failure
+        WithdrawSuccess, // Withdrawal success
+        WithdrawFail, // Withdrawal failure
     }
 }

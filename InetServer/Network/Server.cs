@@ -89,7 +89,7 @@ namespace InetServer.Network
             if (amt < 0)
             {
                 Logger.Info($"Client {c} tried to deposit a negative amount: {amt}$");
-                return StatusCode.Fail;
+                return StatusCode.DepositFail;
             }
 
             try
@@ -99,10 +99,10 @@ namespace InetServer.Network
             catch (OverflowException)
             {
                 Logger.Warning($"Transaction aborted. Overflow occured on deposit by client: {c}");
-                return StatusCode.Fail;
+                return StatusCode.DepositFail;
             }
             Logger.Info($"Client {c} deposited {amt}$");
-            return StatusCode.Success;
+            return StatusCode.DepositSuccess;
         }
 
         /// <summary>
@@ -196,12 +196,12 @@ namespace InetServer.Network
             if (!w.Valid || client.Acc.Savings < w.Amount || w.Amount < 1)
             {
                 Logger.Warning($"Client {client} tried to withdraw {w.Amount}$ but failed");
-                return StatusCode.Fail;
+                return StatusCode.WithdrawFail;
             }
 
             client.Acc.Savings -= w.Amount;
             Logger.Info($"Client {client} withdrew {w.Amount}$");
-            return StatusCode.Success;
+            return StatusCode.WithdrawSuccess;
         }
     }
 }

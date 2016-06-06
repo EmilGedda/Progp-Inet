@@ -21,20 +21,34 @@ namespace InetClient
         private static Language currentLang;
         private static string motd = "Empty Motd";
 
-        private static void Deposit(Status lastStatus)
+        private static Status Deposit(Status lastStatus)
         {
-            Console.Clear();
-            Console.WriteLine($"Account: {lastStatus.Cardnumber}");
-            Console.WriteLine($"Savings: {lastStatus.Savings}$");
-            Console.WriteLine();
-            Console.WriteLine(currentLang[Language.Label.Deposit]);
-            Console.WriteLine(new string('-', 10));
-            int amount;
-            var valid = true;
-            GetCodeAmount(out amount, ref valid);
-            var deposit = new Deposit(amount);
-            client.SendAsync(deposit);
-            Console.Clear();
+            bool correctInput = false;
+            while (!correctInput)
+            {
+
+                Console.Clear();
+                Console.WriteLine($"Account: {lastStatus.Cardnumber}");
+                Console.WriteLine($"Savings: {lastStatus.Savings}$");
+                Console.WriteLine();
+                Console.WriteLine(currentLang[Language.Label.Deposit]);
+                Console.WriteLine(new string('-', 10));
+                int amount;
+                var valid = true;
+                GetCodeAmount(out amount, ref valid);
+                var deposit = new Deposit(amount);
+                client.SendAsync(deposit);
+                lastStatus = bc.Take();
+                if (lastStatus.Code == StatusCode.DepositSuccess || amount == 0)
+                    correctInput = true;
+                else
+                {
+                    Console.WriteLine(currentLang[Language.Label.TransFail]);
+                    Console.ReadKey(true);
+                }
+                Console.Clear();
+            }
+            return lastStatus;
         }
 
         private static void ExitClient()
@@ -62,7 +76,7 @@ namespace InetClient
                 Console.Write(currentLang[Language.Label.EnterAmount] + ": ");
                 var amountStr = Console.ReadLine();
                 correctInput = int.TryParse(amountStr, out amount);
-                if (amount <= 0)
+                if (amount < 0)
                     correctInput = false;
                 if (!correctInput)
                     Console.WriteLine(currentLang[Language.Label.InvalidInput]);
@@ -191,10 +205,10 @@ namespace InetClient
                 switch (key.KeyChar)
                 {
                     case '1':
-                        Withdraw(lastStatus);
+                        lastStatus = Withdraw(lastStatus);
                         break;
                     case '2':
-                        Deposit(lastStatus);
+                        lastStatus = Deposit(lastStatus);
                         break;
                     case '3':
                         LanguageMenu();
@@ -232,7 +246,9 @@ namespace InetClient
         private static StatusCode OnStatus(Client c, Message message)
         {
             var msg = (Status) message;
-            if (msg.Code == StatusCode.LoginSuccess | msg.Code == StatusCode.LoginFail)
+            if (msg.Code == StatusCode.LoginSuccess || msg.Code == StatusCode.LoginFail ||
+                msg.Code == StatusCode.WithdrawSuccess || msg.Code == StatusCode.WithdrawFail ||
+                msg.Code == StatusCode.DepositSuccess || msg.Code == StatusCode.DepositFail)
                 bc.Add(msg);
             return StatusCode.Acknowledge;
         }
@@ -247,20 +263,33 @@ namespace InetClient
 
         private static void SetLanguage(string code) => currentLang = languages[code];
 
-        private static void Withdraw(Status lastStatus)
+        private static Status Withdraw(Status lastStatus)
         {
-            Console.Clear();
-            Console.WriteLine($"Account: {lastStatus.Cardnumber}");
-            Console.WriteLine($"Savings: {lastStatus.Savings}$");
-            Console.WriteLine();
-            Console.WriteLine(currentLang[Language.Label.Withdraw]);
-            Console.WriteLine(new string('-', 10));
-            int amount;
-            var valid = false;
-            GetCodeAmount(out amount, ref valid);
-            var withdrawal = new Withdrawal(amount, valid);
-            client.SendAsync(withdrawal);
-            Console.Clear();
+            bool correctInput = false;
+            while (!correctInput)
+            {
+                Console.Clear();
+                Console.WriteLine($"Account: {lastStatus.Cardnumber}");
+                Console.WriteLine($"Savings: {lastStatus.Savings}$");
+                Console.WriteLine();
+                Console.WriteLine(currentLang[Language.Label.Withdraw]);
+                Console.WriteLine(new string('-', 10));
+                int amount;
+                var valid = false;
+                GetCodeAmount(out amount, ref valid);
+                var withdrawal = new Withdrawal(amount, valid);
+                client.SendAsync(withdrawal);
+                lastStatus = bc.Take();
+                if (lastStatus.Code == StatusCode.WithdrawSuccess || amount == 0)
+                    correctInput = true;
+                else
+                { 
+                    Console.WriteLine(currentLang[Language.Label.TransFail]);
+                    Console.ReadKey(true);
+                }
+                Console.Clear();
+            }
+            return lastStatus;
         }
     }
 }
