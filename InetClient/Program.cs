@@ -15,7 +15,7 @@ namespace InetClient
         private static BlockingCollection<StatusCode> bc = new BlockingCollection<StatusCode>();
         private static ConcurrentDictionary<string, Language> languages = new ConcurrentDictionary<string, Language>();
         private static Language currentLang;
-        private const string DefaultLang = "en-US";
+        private const string DefaultLang = "pt-BR";
 
         // ReSharper disable once UseObjectOrCollectionInitializer
         private static void Main(string[] args)
@@ -58,7 +58,8 @@ namespace InetClient
             Console.Clear();
             Console.WriteLine("1. " + currentLang[Language.Label.Withdraw]);
             Console.WriteLine("2. " + currentLang[Language.Label.Deposit]);
-            Console.WriteLine("3. " + currentLang[Language.Label.Exit]);
+            Console.WriteLine("3. " + currentLang[Language.Label.Language]);
+            Console.WriteLine("4. " + currentLang[Language.Label.Exit]);
         }
 
         private static void LogIn()

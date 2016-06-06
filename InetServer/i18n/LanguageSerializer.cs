@@ -21,7 +21,7 @@ namespace InetServer.i18n
 
         private LanguageSerializer()
         {
-            
+            DefaultLangGen();
         }
 
         public static LanguageSerializer Instance => instance ?? (instance = new LanguageSerializer());
@@ -121,6 +121,83 @@ namespace InetServer.i18n
             }
 
             return false;
+        }
+
+        private static void DefaultLangGen()
+        {
+            var defaultLangs = new List<Language>
+            {
+                new Language
+                {
+                    Name = "Svenska",
+                    Code = "sv-SE",
+                    Mapping = new Dictionary<Language.Label, string>
+                    {
+                        { Language.Label.Login,             "Logga in" },
+                        { Language.Label.Exit,              "Avsluta" },
+                        { Language.Label.EnterCardnumber,   "Skriv in kortnummer" },
+                        { Language.Label.EnterPin,          "Skriv in PIN-kod" },
+                        { Language.Label.Withdraw,          "Uttag" },
+                        { Language.Label.Deposit,           "Insättning" },
+                        { Language.Label.Transfer,          "Överföring" },
+                        { Language.Label.EnterCode,         "Skriv in kod" },
+                        { Language.Label.Language,          "Språk" }
+                    }
+                },
+                new Language
+                {
+                    Name = "English (US)",
+                    Code = "en-US",
+                    Mapping = new Dictionary<Language.Label, string>
+                    {
+                        { Language.Label.Login,             "Login" },
+                        { Language.Label.Exit,              "Exit" },
+                        { Language.Label.EnterCardnumber,   "Enter card number" },
+                        { Language.Label.EnterPin,          "Enter PIN" },
+                        { Language.Label.Withdraw,          "Withdraw" },
+                        { Language.Label.Deposit,           "Deposit" },
+                        { Language.Label.Transfer,          "Transfer" },
+                        { Language.Label.EnterCode,         "Enter code" },
+                        { Language.Label.Language,          "Language" }
+                    }
+                },
+                new Language
+                {
+                    Name = "日本語",
+                    Code = "ja-JP",
+                    Mapping = new Dictionary<Language.Label, string>
+                    {
+                        { Language.Label.Login,             "ログイン" },
+                        { Language.Label.Exit,              "エグジット" },
+                        { Language.Label.EnterCardnumber,   "カード番号を入力しますください" },
+                        { Language.Label.EnterPin,          "PIN番号を入力しますください" },
+                        { Language.Label.Withdraw,          "撤退" },
+                        { Language.Label.Deposit,           "保証金" },
+                        { Language.Label.Transfer,          "移転" },
+                        { Language.Label.EnterCode,         "コードを入力しますください。" },
+                        { Language.Label.Language,          "言語" }
+                    }
+                },
+                new Language
+                {
+                    Name = "Português (Brasil)",
+                    Code = "pt-BR",
+                    Mapping = new Dictionary<Language.Label, string>
+                    {
+                        { Language.Label.Login,             "Login" },
+                        { Language.Label.Exit,              "Sair" },
+                        { Language.Label.EnterCardnumber,   "Digite o número do cartão" },
+                        { Language.Label.EnterPin,          "Digite o número PIN" },
+                        { Language.Label.Withdraw,          "Retirar" },
+                        { Language.Label.Deposit,           "Depositar" },
+                        { Language.Label.Transfer,          "Transferir" },
+                        { Language.Label.EnterCode,         "Digite o código" },
+                        { Language.Label.Language,          "Língua" }
+                    }
+                }
+            };
+
+            SaveAccounts(defaultLangs);
         }
     }
 }

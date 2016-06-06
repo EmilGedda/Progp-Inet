@@ -41,7 +41,8 @@ namespace InetServer.i18n
             Withdraw,
             Deposit,
             Transfer,
-            EnterCode
+            EnterCode,
+            Language
         }
 
         public override byte[] Destruct()
