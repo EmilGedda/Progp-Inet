@@ -11,7 +11,7 @@ namespace InetServer.Network
     /// <summary>
     ///     The wrapper class around TcpClient. Both the server and the client uses the same code for communicating with
     ///     eachother.
-    ///     This class should be disposed correctly whenever the owner/server exits.
+    ///     This class should be disposed of correctly whenever the owner/server exits.
     /// </summary>
     public class Client : IDisposable
     {
@@ -61,7 +61,7 @@ namespace InetServer.Network
         /// <summary>
         ///     Starts a forever-running task which listens to incoming messages and handles them asynchronously.
         /// </summary>
-        /// <returns>The task object</returns>
+        /// <returns>The task object for the infinite running listening</returns>
         public Task ListenAsync()
         {
             return Task.Run(async () =>
@@ -74,7 +74,7 @@ namespace InetServer.Network
                     var cnt = await Tcp.GetStream().ReadAsync(msg, 0, 1);
                     switch (msg[0])
                     {
-                        case 5: //Language message
+                        case (byte)MessageType.Language:
                             var intbuf = new byte[4];
                             // Read the next word in the packet which specifies the message length.
                             await Tcp.GetStream().ReadAsync(intbuf, 0, 4);
@@ -85,7 +85,7 @@ namespace InetServer.Network
                             // Read the rest of the message, now that we know the length.
                             await Tcp.GetStream().ReadAsync(buffer, 5, len);
                             break;
-                        case 2: // motd message
+                        case (byte)MessageType.Motd:
                             Array.Resize(ref buffer, 81);
                             await Tcp.GetStream().ReadAsync(buffer, 1, 80);
                             buffer[0] = 2; //motd

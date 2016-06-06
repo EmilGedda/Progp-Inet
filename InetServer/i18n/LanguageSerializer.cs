@@ -195,7 +195,10 @@ namespace InetServer.i18n
                         {Language.Label.InvalidInput, "Entrada inválida, por favor, tente novamente"},
                         {Language.Label.InvalidMenuItem, "Seleção inválida, por favor, tente novamente"},
                         {Language.Label.EnterAmount, "Digite a quantidade"},
-                        {Language.Label.TransFail, "Falha na transação. Para voltar ao menu principal, digite como quantidade 0. pressione qualquer tecla para continuar..."}
+                        {
+                            Language.Label.TransFail,
+                            "Falha na transação. Para voltar ao menu principal, digite como quantidade 0. pressione qualquer tecla para continuar..."
+                        }
                     }
                 }
             };

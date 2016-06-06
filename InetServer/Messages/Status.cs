@@ -73,6 +73,6 @@ namespace InetServer.Messages
         DepositSuccess, // Deposit success
         DepositFail, // Deposit failure
         WithdrawSuccess, // Withdrawal success
-        WithdrawFail, // Withdrawal failure
+        WithdrawFail // Withdrawal failure
     }
 }

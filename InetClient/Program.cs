@@ -21,12 +21,16 @@ namespace InetClient
         private static Language currentLang;
         private static string motd = "Empty Motd";
 
+        /// <summary>
+        ///     Method to handle a deposit by the user
+        /// </summary>
+        /// <param name="lastStatus">The Status of the last withdrawal or deposit</param>
+        /// <returns>The new Status after the deposit</returns>
         private static Status Deposit(Status lastStatus)
         {
-            bool correctInput = false;
+            var correctInput = false;
             while (!correctInput)
             {
-
                 Console.Clear();
                 Console.WriteLine($"Account: {lastStatus.Cardnumber}");
                 Console.WriteLine($"Savings: {lastStatus.Savings}$");
@@ -51,12 +55,20 @@ namespace InetClient
             return lastStatus;
         }
 
+        /// <summary>
+        ///     Exit the Client and dispose of the connection.
+        /// </summary>
         private static void ExitClient()
         {
             client.Dispose();
             Environment.Exit(0);
         }
 
+        /// <summary>
+        ///     Helper function used by Withdraw and Deposit, verifies codes and amounts entered.
+        /// </summary>
+        /// <param name="amount">How much the user entered</param>
+        /// <param name="valid">Whether the withdrawal should be considered valid</param>
         private static void GetCodeAmount(out int amount, ref bool valid)
         {
             var correctInput = false;
@@ -83,6 +95,9 @@ namespace InetClient
             }
         }
 
+        /// <summary>
+        ///     Menu for handling the selection of languages
+        /// </summary>
         private static void LanguageMenu()
         {
             Console.Clear();
@@ -111,6 +126,10 @@ namespace InetClient
             Console.Clear();
         }
 
+        /// <summary>
+        ///     Menu for enabling a user to log in onto the server
+        /// </summary>
+        /// <returns></returns>
         private static Status LogIn()
         {
             short pinInt = 0;
@@ -150,6 +169,10 @@ namespace InetClient
             return status;
         }
 
+        /// <summary>
+        ///     Program entrypoint.
+        /// </summary>
+        /// <param name="args">Arguments sent on the CLI</param>
         // ReSharper disable once UseObjectOrCollectionInitializer
         private static void Main(string[] args)
         {
@@ -188,6 +211,10 @@ namespace InetClient
             Console.ReadKey();
         }
 
+        /// <summary>
+        ///     The home menu handler
+        /// </summary>
+        /// <param name="lastStatus">The status of the last Message sent</param>
         private static void Menu(Status lastStatus)
         {
             Console.Clear();
@@ -225,6 +252,12 @@ namespace InetClient
             }
         }
 
+        /// <summary>
+        ///     This triggers whenever a Language message is recieved
+        /// </summary>
+        /// <param name="c">The client (i.e the server) which this message originates from</param>
+        /// <param name="message">The Language recieved</param>
+        /// <returns>StatusCode.Success always</returns>
         private static StatusCode OnLang(Client c, Message message)
         {
             var lang = (Language) message;
@@ -232,18 +265,40 @@ namespace InetClient
             return StatusCode.Success;
         }
 
+        /// <summary>
+        ///     This triggers whenever a LanguageAvailable message is recieved.
+        ///     Initializes a new ConcurrentDict for the languages held.
+        /// </summary>
+        /// <param name="c">The client (i.e the server) which this message originates from</param>
+        /// <param name="message">The LanguageAvailable recieved</param>
+        /// <returns>StatusCode.Success always</returns>
         private static StatusCode OnLangsAvailable(Client c, Message message)
         {
             languages = new ConcurrentDictionary<string, Language>();
             return StatusCode.Success;
         }
 
+        /// <summary>
+        ///     This triggers whenever a Motd message is recieved.
+        ///     Updates the store motd.
+        /// </summary>
+        /// <param name="c">The client (i.e the server) which this message originates from</param>
+        /// <param name="message">The Motd recieved</param>
+        /// <returns>StatusCode.Success always</returns>
         private static StatusCode OnMotd(Client c, Message message)
         {
             motd = ((Motd) message).Message;
             return StatusCode.Success;
         }
 
+        /// <summary>
+        ///     This triggers whenever a Status message is recieved.
+        ///     If the status originates from a transaction or log in, it is sent to the BlockingCollection for interthread
+        ///     communication purposes.
+        /// </summary>
+        /// <param name="c">The client (i.e the server) which this message originates from</param>
+        /// <param name="message">The Status recieved</param>
+        /// <returns>StatusCode.Success always</returns>
         private static StatusCode OnStatus(Client c, Message message)
         {
             var msg = (Status) message;
@@ -254,6 +309,9 @@ namespace InetClient
             return StatusCode.Acknowledge;
         }
 
+        /// <summary>
+        ///     Print the basic menu
+        /// </summary>
         private static void PrintMenu()
         {
             Console.WriteLine("1. " + currentLang[Language.Label.Withdraw]);
@@ -262,11 +320,21 @@ namespace InetClient
             Console.WriteLine("4. " + currentLang[Language.Label.Exit]);
         }
 
+        /// <summary>
+        ///     Set the current selected language
+        /// </summary>
+        /// <param name="code">The Language code of the language chosen to be the new display planguage</param>
         private static void SetLanguage(string code) => currentLang = languages[code];
 
+
+        /// <summary>
+        ///     Menu function for handling a withdrawal inside the client
+        /// </summary>
+        /// <param name="lastStatus">The status of the last transaction or login</param>
+        /// <returns>The status the server responded with after the new transaction</returns>
         private static Status Withdraw(Status lastStatus)
         {
-            bool correctInput = false;
+            var correctInput = false;
             while (!correctInput)
             {
                 Console.Clear();
