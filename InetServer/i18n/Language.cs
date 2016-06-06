@@ -23,7 +23,11 @@ namespace InetServer.i18n
             Withdraw,
             Deposit,
             Transfer,
-            EnterCode
+            EnterCode,
+            Language,
+            InvalidInput,
+            InvalidMenuItem,
+            EnterAmount
         }
 
         /// <summary>
@@ -71,6 +75,6 @@ namespace InetServer.i18n
             return p;
         }
 
-        public string Get(Label lbl) => Mapping[lbl];
+        public string this[Label lbl] => Mapping[lbl];
     }
 }

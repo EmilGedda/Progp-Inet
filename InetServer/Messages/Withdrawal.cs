@@ -5,7 +5,7 @@
     ///     The last byte is used for validation, all other bytes are
     ///     as described in Deposit.
     /// </summary>
-    internal class Withdrawal : Deposit
+    public class Withdrawal : Deposit
     {
         /// <summary>
         ///     A withdrawal-transaction
